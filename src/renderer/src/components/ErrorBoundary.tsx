@@ -40,7 +40,7 @@ const ErrorBoundaryFallbackUi = (props: ErrorBoundaryStates) => {
       )}
       <div className="buttons-container">
         <Button
-          className="bg-background-color-3! text-font-color-black hover:border-background-color-3 dark:bg-dark-background-color-3! dark:text-font-color-black! dark:hover:border-background-color-3 mt-4 mr-0! text-sm"
+          className="bg-background-color-2! text-font-color-highlight-2! border border-font-color-highlight-2! hover:bg-background-color-3! dark:bg-dark-background-color-2! dark:text-dark-font-color-highlight-2! dark:border-dark-font-color-highlight-2! dark:hover:bg-dark-background-color-3! mt-4 mr-0! text-sm"
           label={t('common.restartApp')}
           iconName="restart_alt"
           clickHandler={() => window.api.appControls.restartRenderer('error')}
