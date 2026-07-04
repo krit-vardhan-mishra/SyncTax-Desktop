@@ -106,45 +106,45 @@
 
 /* ? ROOT STYLES */
 :root {
-  --background-color-1: 0 0% 100%; /* hsl(0 0% 100%) */
-  --background-color-2: 212 48% 94%; /* hsl(212 48% 94%) */
-  --background-color-3: 213 80% 88%; /* hsl(213 80% 88%) */
-  --side-bar-background: 212 50% 94%; /* hsl(212 50% 94%) */
-  --background-color-dimmed: 0 0% 30%; /* hsl(0 0% 30% / 50%) */
+  --background-color-1: 210 17% 98%;           /* Light background: #F8F9FA */
+  --background-color-2: 0 0% 100%;             /* Card & Panel: #FFFFFF */
+  --background-color-3: 0 0% 95%;              /* Focus/hover highlights */
+  --side-bar-background: 0 0% 100%;            /* Sidebar background: #FFFFFF */
+  --background-color-dimmed: 0 0% 30%;         /* Dimmed overlays */
   --song-background-color: var(--background-color-1);
-  --text-color: 0 0% 0%; /* hsl(0 0% 0%) */
-  --text-color-dimmed: 0 0% 50%; /* hsl(0 0% 50%) */
-  --text-color-white: 0 0% 100%; /* hsl(0 0% 100%) */
-  --text-color-black: 0 0% 0%; /* hsl(0 0% 0%) */
-  --text-color-crimson: 348 83% 47%; /* hsl(348 83% 47%) */
-  --text-color-highlight: 203 39% 44%; /* hsl(203 39% 44%) */
-  --text-color-highlight-2: 247 74% 63%; /* hsl(247 74% 63%) */
-  --context-menu-background: 0 0% 100%; /* hsl(0 0% 100% / 90%) */
-  --context-menu-list-hover: 198 18% 89%; /* hsl(198 18% 89% / 75%) */
-  --seekbar-background-color: 0 0% 20%; /* hsl(0 0% 20%) */
-  --seekbar-track-background-color: 0 0% 80%; /* hsl(0 0% 80%) */
-  --foreground-color-1: 247 74% 65%; /* hsl(247 74% 65%) */
-  --scrollbar-thumb-background-color: 212 48% 94%; /* hsl(212, 48%, 94%) */
+  --text-color: 260 8% 12%;                    /* Primary title text: #1C1B1F */
+  --text-color-dimmed: 256 7% 29%;             /* Secondary body text: #49454F */
+  --text-color-white: 0 0% 100%;
+  --text-color-black: 0 0% 0%;
+  --text-color-crimson: 348 100% 50%;          /* Primary red accent: #FF0033 */
+  --text-color-highlight: 257 5% 47%;          /* Subtext/labels: #79747E */
+  --text-color-highlight-2: 348 100% 50%;      /* Primary red accent: #FF0033 */
+  --context-menu-background: 0 0% 100%;
+  --context-menu-list-hover: 0 0% 91%;         /* Chip/hover: #E8E8E8 */
+  --seekbar-background-color: 348 100% 50%;
+  --seekbar-track-background-color: 0 0% 88%;  /* Track background: #E0E0E0 */
+  --foreground-color-1: 348 100% 50%;          /* Focus borders and active indicators */
+  --scrollbar-thumb-background-color: 0 0% 88%;
   --transition-duration-0_2s: 0.2s;
   --transition-duration-0_25s: 0.25s;
   --transition-duration-0_3s: 0.3s;
   --slider-opacity: 0.5;
 
   /* Dark colors */
-  --dark-background-color-1: 228 7% 14%; /* hsl(228 7% 14%) */
-  --dark-background-color-2: 225 8% 20%; /* hsl(225 8% 20%) */
-  --dark-background-color-3: 213 80% 88%; /* hsl(213 80% 88%) */
+  --dark-background-color-1: 240 5% 7%;         /* Main Dark: #0E0E0F */
+  --dark-background-color-2: 240 6% 11%;        /* Card background: #1A1A1D */
+  --dark-background-color-3: 240 6% 10%;        /* Active highlights: #19191C */
   --dark-song-background-color: var(--background-color-2);
-  --dark-side-bar-background: 228 7% 20%; /* hsl(228 7% 20%) */
-  --dark-text-color: 0 0% 100%; /* hsl(0 0% 100%) */
-  --dark-text-color-dimmed: 0 0% 50%; /* hsl(0 0% 50%) */
-  --dark-text-color-highlight: 213 80% 88%; /* hsl(213 80% 88%) */
-  --dark-text-color-highlight-2: 244 98% 80%; /* hsl(244 98% 80%) */
-  --dark-context-menu-background: 228 7% 14%; /* hsla(228 7% 14% / 90%) */
-  --dark-context-menu-list-hover: 224 8% 28%; /* hsl(224 8% 28%) */
-  --dark-seekbar-background-color: 240 1% 83%; /* hsl(240 1% 83%) */
-  --dark-seekbar-track-background-color: 0 0% 25%;
-  --dark-scrollbar-thumb-background-color: 212 48% 94%; /* hsl(212, 48%, 94%) */
+  --dark-side-bar-background: 240 6% 10%;       /* Sidebar background: #19191C */
+  --dark-text-color: 0 0% 100%;                 /* Primary text: #FFFFFF */
+  --dark-text-color-dimmed: 0 0% 70%;           /* Secondary text: #B3B3B3 */
+  --dark-text-color-highlight: 0 0% 55%;        /* Subtext: #8C8C8C */
+  --dark-text-color-highlight-2: 354 100% 62%;  /* Dark Red Accent: #FF3B50 */
+  --dark-context-menu-background: 240 6% 10%;   /* Popup menus: #19191C */
+  --dark-context-menu-list-hover: 240 5% 15%;   /* Hover overlays: #242428 */
+  --dark-seekbar-background-color: 354 100% 62%;
+  --dark-seekbar-track-background-color: 240 5% 17%; /* Track background: #2A2A2E */
+  --dark-scrollbar-thumb-background-color: 212 48% 94%;
   --dark-slider-opacity: 0.25;
 }
 
