@@ -21,7 +21,7 @@ export const handleFileProtocol = async (req: GlobalRequest) => {
     const stat = statSync(filePath);
     const fileSize = stat.size;
     const range = req.headers.get('range');
-    logger.silly('Serving file from nora://', { url: req.url, range, filePath, mimeType });
+    logger.silly('Serving file from synctax://', { url: req.url, range, filePath, mimeType });
 
     const headers: Record<string, string> = {
       'Content-Type': mimeType,

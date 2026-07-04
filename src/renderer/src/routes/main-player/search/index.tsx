@@ -290,7 +290,7 @@ function SearchPage() {
               <p className="text-sm text-font-color-highlight dark:text-dark-font-color-highlight mb-6 leading-relaxed">
                 {t(
                   'searchPage.ytDlpRequiredDesc',
-                  'Nora uses yt-dlp to stream audio online. Download the required component to start listening to online music.'
+                  'SyncTax Desktop uses yt-dlp to stream audio online. Download the required component to start listening to online music.'
                 )}
               </p>
               <Button
@@ -370,7 +370,7 @@ function SearchPage() {
               {t('searchPage.downloadingYtDlp', 'Downloading yt-dlp...')}
             </h3>
             <p className="text-xs text-font-color-highlight dark:text-dark-font-color-highlight mb-6">
-              {t('searchPage.downloadingDesc', 'Setting up dependencies. Please do not close Nora.')}
+              {t('searchPage.downloadingDesc', 'Setting up dependencies. Please do not close SyncTax Desktop.')}
             </p>
             
             {/* Progress Bar */}

@@ -36,7 +36,7 @@ const OnlineStreamingSettings = () => {
       <div className="settings-section-content pl-4">
         <p className="mb-4 text-sm text-font-color-black/70 dark:text-font-color-white/70">
           Sign in to your YouTube Music account. This helps resolve streaming errors (Option 3).
-          By default, Nora uses yt-dlp (Option 1) to stream online music.
+          By default, SyncTax Desktop uses yt-dlp (Option 1) to stream online music.
         </p>
 
         {isLoggedIn ? (

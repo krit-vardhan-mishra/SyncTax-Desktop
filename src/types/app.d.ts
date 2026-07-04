@@ -1322,7 +1322,7 @@ declare global {
   }
 
   type ArtAssetKeys =
-    | 'nora_logo'
+    | 'synctax_logo'
     | 'song_artwork'
     | 'album_artwork'
     | 'favorites_artwork'

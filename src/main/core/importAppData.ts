@@ -10,12 +10,12 @@ import copyDir from '../utils/copyDir';
 import { songCoversFolderPath } from './exportAppData';
 import { type ExportedUserPreferences, importUserPreferences } from './userPreferencesExportImport';
 
-const requiredItemsForImport = ['nora.pglite.db.sql', 'song_covers'];
+const requiredItemsForImport = ['synctax.pglite.db.sql', 'song_covers'];
 
 const optionalItemsForImport = ['local_storage.json', 'user_preferences.json'];
 
 const DEFAULT_EXPORT_DIALOG_OPTIONS: OpenDialogOptions = {
-  title: `Select a Destination where you saved Nora's Exported App Data`,
+  title: `Select a Destination where you saved SyncTax Desktop's Exported App Data`,
   buttonLabel: 'Select Destination',
   properties: ['openDirectory', 'createDirectory']
 };
@@ -23,7 +23,7 @@ const DEFAULT_EXPORT_DIALOG_OPTIONS: OpenDialogOptions = {
 const importRequiredData = async (importDir: string) => {
   try {
     // DATABASE IMPORT
-    const dbQuery = await fs.readFile(path.join(importDir, 'nora.pglite.db.sql'), {
+    const dbQuery = await fs.readFile(path.join(importDir, 'synctax.pglite.db.sql'), {
       encoding: 'utf-8'
     });
     await importDatabase(dbQuery);

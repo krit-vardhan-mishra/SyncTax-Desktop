@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 /**
- * Colorize-logs.ts Simple NDJSON log colorizer and tailer for Nora logs.
+ * Colorize-logs.ts Simple NDJSON log colorizer and tailer for SyncTax Desktop logs.
  *
  * Features:
  *
@@ -10,7 +10,7 @@
  * - If --path is not provided, searches the current working directory for log files (*.log, *.ndjson,
  *   *.txt). If multiple files are found, prompts the user to select one (the latest file is
  *   selected by default).
- * - If no files are found in CWD, falls back to %APPDATA%/nora/logs or LOG_PATH from .env.
+ * - If no files are found in CWD, falls back to %APPDATA%/synctax/logs or LOG_PATH from .env.
  *
  * Usage: node ./scripts/colorize-logs.ts [--path <file>] [--no-follow] [--levels info,debug]
  * [--depth N] [--use-env-log-path] [--show-latest] Examples: node ./scripts/colorize-logs.ts #
@@ -70,7 +70,7 @@ interface LogFile {
 
 // Constants
 const APPDATA = process.env.APPDATA || process.env.HOME || '.';
-const DEFAULT_LOG_DIR = path.join(APPDATA, 'nora', 'logs');
+const DEFAULT_LOG_DIR = path.join(APPDATA, 'SyncTaxDesktop', 'logs');
 const LOG_FILE_PATTERN = /\.(log|ndjson|txt)$/i;
 const TAIL_LINE_COUNT = 100;
 const POLL_INTERVAL_MS = 1000;

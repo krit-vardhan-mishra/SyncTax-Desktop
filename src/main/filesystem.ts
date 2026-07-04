@@ -23,7 +23,7 @@ import isPathADir from './utils/isPathADir';
 import '@db/db';
 
 export const DEFAULT_ARTWORK_SAVE_LOCATION = path.join(app.getPath('userData'), 'song_covers');
-export const DEFAULT_FILE_URL = 'nora://localfiles/';
+export const DEFAULT_FILE_URL = 'synctax://localfiles/';
 
 // const user: typeof usersTable.$inferInsert = {
 //   name: 'John',

@@ -35,10 +35,10 @@ const SongAlbumInput = (props: Props) => {
                           songAlbum.artworkPath
                         )
                         ? songAlbum.artworkPath
-                        : `nora://localfiles/${songAlbum.artworkPath}`
+                        : `synctax://localfiles/${songAlbum.artworkPath}`
                       : DefaultSongArtwork
                     // : songArtworkPath
-                    // ? `nora://localfiles/${songArtworkPath}`
+                    // ? `synctax://localfiles/${songArtworkPath}`
                   }
                   className="aspect-square w-16 rounded-lg"
                   alt=""

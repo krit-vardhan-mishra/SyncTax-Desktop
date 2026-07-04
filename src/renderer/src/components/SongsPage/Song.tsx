@@ -649,17 +649,18 @@ const Song = forwardRef((props: SongProp, ref: ForwardedRef<HTMLDivElement>) => 
       </div>
       <div
         className={`song-info-container text-font-color-black dark:text-font-color-white grid grow grid-cols-[35%_2fr_1fr_minmax(4rem,5rem)_minmax(4.5rem,6.5rem)] items-center gap-3 sm:grid-cols-[45%_1fr_minmax(4.5rem,6rem)] sm:gap-2 lg:grid-cols-[40%_1fr_minmax(4rem,5rem)_minmax(4.5rem,6.5rem)] lg:gap-0! ${
-          (currentSongData.songId === songId || isAMultipleSelection) &&
-          'dark:text-font-color-white! font-medium'
+          currentSongData.songId === songId
+            ? 'text-font-color-highlight-2! dark:text-dark-font-color-highlight-2! font-semibold'
+            : isAMultipleSelection
+              ? 'dark:text-font-color-white! font-medium'
+              : ''
         }`}
       >
         <NavLink
           to="/main-player/songs/$songId"
           params={{ songId: String(songId) }}
           title={title}
-          className={`song-title truncate text-base font-normal outline-offset-1 transition-none focus-visible:outline! ${
-            currentSongData.songId === songId && 'text-font-color-highlight-2! dark:text-dark-font-color-highlight-2! font-semibold'
-          }`}
+          className="song-title truncate text-base font-normal outline-offset-1 transition-none focus-visible:outline!"
           disabled={isMultipleSelectionEnabled}
         >
           {window.api.properties.isInDevelopment && `(${songId})`} {title}

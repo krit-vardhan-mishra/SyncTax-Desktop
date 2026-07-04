@@ -109,7 +109,7 @@ const sendAudioData = async (songId: number): Promise<AudioPlayerData> => {
         setDiscordRpcActivity({
           details: `Listening to '${cachedSong.title}'`,
           state: `By ${cachedSong.artists?.map((artist) => artist.name).join(', ') || 'Unknown Artist'}`,
-          largeImageKey: 'nora_logo',
+          largeImageKey: 'synctax_logo',
           smallImageKey: 'song_artwork',
           startTimestamp: now,
           endTimestamp: now + cachedSong.duration * 1000
@@ -170,7 +170,7 @@ const sendAudioData = async (songId: number): Promise<AudioPlayerData> => {
       setDiscordRpcActivity({
         details: `Listening to '${data.title}'`,
         state: `By ${data.artists?.map((artist) => artist.name).join(', ')}`,
-        largeImageKey: 'nora_logo',
+        largeImageKey: 'synctax_logo',
         smallImageKey: 'song_artwork',
         startTimestamp: now,
         endTimestamp: now + data.duration * 1000

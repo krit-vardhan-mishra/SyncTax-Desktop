@@ -1,8 +1,8 @@
 {
-	"name": "nora",
+	"name": "synctax-desktop",
 	"version": "4.0.0-alpha.4",
 	"type": "module",
-	"description": "Nora",
+	"description": "SyncTax Desktop",
 	"devEngines": {
 		"packageManager": [
 			{
@@ -23,27 +23,27 @@
 	],
 	"main": "./out/main/main.js",
 	"author": {
-		"email": "adsandakannipunajith2003@outlook.com",
-		"name": "Sandakan Nipunajith",
-		"url": "https://github.com/Sandakan"
+		"email": "kirti.alwayssays@outlook.com",
+		"name": "Krit Vardhan Mishra",
+		"url": "https://github.com/krit-vardhan-mishra"
 	},
-	"homepage": "https://github.com/Sandakan/Nora",
+	"homepage": "https://github.com/krit-vardhan-mishra/SyncTax-Desktop",
 	"urls": {
-		"discord_invite_url": "https://discord.gg/c5rGKnBs4y",
-		"raw_repository_url": "https://raw.githubusercontent.com/Sandakan/Nora/",
-		"website_url": "https://noramusic.netlify.app/"
+		"discord_invite_url": "",
+		"raw_repository_url": "https://raw.githubusercontent.com/krit-vardhan-mishra/SyncTax-Desktop/",
+		"website_url": "https://github.com/krit-vardhan-mishra/SyncTax-Desktop"
 	},
 	"bugs": {
-		"email": "sandakannipunajith@gmail.com",
-		"url": "https://github.com/Sandakan/Nora/issues"
+		"email": "mishra.kritvardhan@gmail.com",
+		"url": "https://github.com/krit-vardhan-mishra/SyncTax-Desktop/issues"
 	},
 	"releaseNotes": {
-		"json": "https://raw.githubusercontent.com/Sandakan/Nora/master/release-notes.json",
-		"md": "https://raw.githubusercontent.com/Sandakan/Nora/master/changelog.md"
+		"json": "https://raw.githubusercontent.com/krit-vardhan-mishra/SyncTax-Desktop/master/release-notes.json",
+		"md": "https://raw.githubusercontent.com/krit-vardhan-mishra/SyncTax-Desktop/master/changelog.md"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Sandakan/Nora"
+		"url": "https://github.com/krit-vardhan-mishra/SyncTax-Desktop"
 	},
 	"appPreferences": {
 		"metadataEditingSupportedExtensions": [
@@ -141,7 +141,6 @@
 		"@vitalets/google-translate-api": "^9.2.1",
 		"@vitejs/plugin-react": "^6.0.1",
 		"didyoumean2": "^7.0.4",
-		"discord-rpc": "^4.0.1",
 		"dotenv": "^17.3.1",
 		"drizzle-orm": "^0.45.2",
 		"electron-store": "^11.0.2",
@@ -175,7 +174,6 @@
 		"@tanstack/router-cli": "^1.166.25",
 		"@tanstack/router-plugin": "^1.167.12",
 		"@types/babel__core": "^7.20.5",
-		"@types/discord-rpc": "^4.0.1",
 		"@types/node": "^25.5.0",
 		"@types/pinyin": "^2.10.2",
 		"@types/react": "^19.2.14",

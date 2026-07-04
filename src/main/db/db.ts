@@ -14,7 +14,7 @@ import { app } from 'electron';
 
 import { seedDatabase } from './seed';
 
-const DB_NAME = 'nora.pglite.db';
+const DB_NAME = 'synctax.pglite.db';
 export const DB_PATH = app.getPath('userData') + '/' + DB_NAME;
 const migrationsFolder = path.resolve(import.meta.dirname, '../../resources/drizzle/');
 logger.debug(`Migrations folder: ${migrationsFolder}`);

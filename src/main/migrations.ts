@@ -64,7 +64,6 @@ export const songMigrations = {
 };
 
 export const artistMigrations = {
-  // ? This migration is added to fix as a fix to https://github.com/Sandakan/Nora/issues/191
   '3.0.0-stable': (store: Conf<{ version?: string; artists: SavableArtist[] }>) => {
     logger.debug('Starting the artists.json migration process.', {
       version: '3.0.0-stable'

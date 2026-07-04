@@ -105,7 +105,7 @@ export function useMediaSession(player: HTMLAudioElement, dependencies: MediaSes
           artworkPath = `data:;base64,${currentSong.artwork}`;
         }
       } else if (currentSong.artworkPath) {
-        // Use the artworkPath directly (e.g. online https:// URL or local nora:// URL)
+        // Use the artworkPath directly (e.g. online https:// URL or local synctax:// URL)
         artworkPath = currentSong.artworkPath;
       } else {
         artworkPath = '';

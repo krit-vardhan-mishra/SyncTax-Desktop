@@ -1,12 +1,12 @@
-# Contributing Guide for Nora
+# Contributing Guide for SyncTax Desktop
 
-First off, Thank you for deciding to contribute to Nora. It's people like you that make Nora live a long time.
+First off, Thank you for deciding to contribute to SyncTax Desktop. It's people like you that make SyncTax Desktop live a long time.
 
 Following these guidelines helps to communicate that you respect the time of the developers managing and developing this open source project. In return, they should reciprocate that respect in addressing your issue, assessing changes, and helping you finalize your pull requests.
 
 ## Types of contributions
 
-> Nora is an open source project and I'd love to receive contributions from the community. These can be bug reports, feature requests or writing code to resolve already existing issues.
+> SyncTax Desktop is an open source project and I'd love to receive contributions from the community. These can be bug reports, feature requests or writing code to resolve already existing issues.
 
 ## Ground Rules
 
@@ -29,11 +29,11 @@ Following these guidelines helps to communicate that you respect the time of the
 
 ### How to report a bug
 
-> You can follow the [bug report template](./ISSUE_TEMPLATE/bug_report.md) when adding a new bug report for Nora.
+> You can follow the [bug report template](./ISSUE_TEMPLATE/bug_report.md) when adding a new bug report for SyncTax Desktop.
 
 ### How to suggest a feature or enhancement
 
-> You can follow the [feature request template](./ISSUE_TEMPLATE/bug_report.md) when adding new feature request for Nora.
+> You can follow the [feature request template](./ISSUE_TEMPLATE/bug_report.md) when adding new feature request for SyncTax Desktop.
 
 <br>
 

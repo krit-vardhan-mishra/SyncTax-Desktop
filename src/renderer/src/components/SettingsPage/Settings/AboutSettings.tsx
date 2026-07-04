@@ -7,8 +7,7 @@ import appLicense from '../../../../../../LICENSE.txt?raw';
 import openSourceLicenses from '../../../../../../open_source_licenses.txt?raw';
 import { version, author, homepage, bugs, urls } from '../../../../../../package.json';
 import localReleaseNotes from '../../../../../../release-notes.json';
-import DiscordLightIcon from '../../../assets/images/svg/discord_dark_mode.svg';
-import DiscordDarkIcon from '../../../assets/images/svg/discord_light_mode.svg';
+
 import GithubLightIcon from '../../../assets/images/svg/github-white.svg';
 import GithubDarkIcon from '../../../assets/images/svg/github.svg';
 import AppIcon from '../../../assets/images/webp/logo_light_mode.webp';
@@ -67,7 +66,7 @@ const AboutSettings = () => {
           <div className="flex items-center">
             <Img src={AppIcon} className="aspect-square max-h-12 rounded-md shadow-md" alt="" />
             <div className="ml-4 flex flex-col">
-              <span className="block">Nora</span>
+              <span className="block">SyncTax Desktop</span>
               <span className="text-sm font-light">
                 v{version}{' '}
                 {elapsed && (
@@ -102,46 +101,30 @@ const AboutSettings = () => {
               className="about-link mr-0! block w-fit cursor-pointer rounded-none! border-0! bg-transparent p-0! leading-[0] opacity-70 outline-offset-2 transition-opacity hover:bg-transparent hover:opacity-100 focus-visible:outline! dark:bg-transparent dark:hover:bg-transparent"
               iconName="language"
               iconClassName="text-2xl! leading-none!"
-              tooltipLabel={t('settingsPage.noraWebsite')}
+              tooltipLabel={t('settingsPage.synctaxWebsite')}
               clickHandler={() =>
                 changePromptMenuData(
                   true,
                   <OpenLinkConfirmPrompt
                     link={urls.website_url}
-                    title={t('settingsPage.noraWebsite')}
+                    title={t('settingsPage.synctaxWebsite')}
                   />,
                   'flex flex-col'
                 )
               }
             />
-            <Img
-              src={isDarkMode ? DiscordLightIcon : DiscordDarkIcon}
-              className="w-6 cursor-pointer opacity-70! transition-opacity! hover:opacity-100!"
-              alt={t('settingsPage.noraDiscordServer')}
-              showAltAsTooltipLabel
-              onClick={() =>
-                changePromptMenuData(
-                  true,
-                  <OpenLinkConfirmPrompt
-                    link={urls.discord_invite_url}
-                    title={t('settingsPage.noraDiscordServer')}
-                  />,
-                  'flex flex-col'
-                )
-              }
-              tabIndex={0}
-            />
+
             <Img
               src={isDarkMode ? GithubLightIcon : GithubDarkIcon}
               className="w-6 cursor-pointer opacity-70! transition-opacity! hover:opacity-100!"
-              alt={t('settingsPage.noraGithubRepo')}
+              alt={t('settingsPage.synctaxGithubRepo')}
               showAltAsTooltipLabel
               onClick={() =>
                 changePromptMenuData(
                   true,
                   <OpenLinkConfirmPrompt
                     link={homepage}
-                    title={t('settingsPage.noraGithubRepo')}
+                    title={t('settingsPage.synctaxGithubRepo')}
                   />,
                   'flex flex-col'
                 )
@@ -153,15 +136,15 @@ const AboutSettings = () => {
         <div className="mb-4 flex items-center gap-4">
           <img
             alt="GitHub all releases"
-            src="https://img.shields.io/github/downloads/Sandakan/Nora/total?label=all%20time%20downloads"
+            src="https://img.shields.io/github/downloads/krit-vardhan-mishra/SyncTax-Desktop/total?label=all%20time%20downloads"
           />
           <img
             alt="GitHub release (latest by date)"
-            src={`https://img.shields.io/github/downloads/Sandakan/Nora/v${version}/total`}
+            src={`https://img.shields.io/github/downloads/krit-vardhan-mishra/SyncTax-Desktop/v${version}/total`}
           />
           <Hyperlink
-            linkTitle={t('settingsPage.noraGithubIssues')}
-            link="https://github.com/Sandakan/Nora/issues"
+            linkTitle={t('settingsPage.synctaxGithubIssues')}
+            link="https://github.com/krit-vardhan-mishra/SyncTax-Desktop/issues"
           >
             <img
               alt="GitHub issues"
@@ -170,20 +153,20 @@ const AboutSettings = () => {
           </Hyperlink>
 
           <Hyperlink
-            linkTitle={t('settingsPage.noraLocalizationStatus')}
-            link="https://crowdin.com/project/nora"
+            linkTitle={t('settingsPage.synctaxLocalizationStatus')}
+            link="https://github.com/krit-vardhan-mishra/SyncTax-Desktop"
           >
             <img
-              src="https://badges.crowdin.net/nora/localized.svg"
-              alt={t('settingsPage.noraLocalizationStatus')}
+              src="https://img.shields.io/badge/localization-in%20progress-blue"
+              alt={t('settingsPage.synctaxLocalizationStatus')}
             />
           </Hyperlink>
         </div>
         <ul className="mb-4 list-disc pl-4 text-sm">
-          <li>{t('settingsPage.noraDescription')}</li>
+          <li>{t('settingsPage.synctaxDescription')}</li>
           <li>
             <Trans
-              i18nKey="settingsPage.noraInspiration"
+              i18nKey="settingsPage.synctaxInspiration"
               components={{
                 Hyperlink: (
                   <Hyperlink
@@ -196,7 +179,7 @@ const AboutSettings = () => {
           </li>
           <li>
             <Trans
-              i18nKey="settingsPage.noraLicenseNotice"
+              i18nKey="settingsPage.synctaxLicenseNotice"
               components={{
                 Button: (
                   <Button
@@ -388,7 +371,7 @@ const AboutSettings = () => {
                 Hyperlink: (
                   <Hyperlink
                     link={`${bugs.url}/new/choose`}
-                    linkTitle={t('settingsPage.createIssueOnNoraGithubRepo')}
+                    linkTitle={t('settingsPage.createIssueOnsynctaxGithubRepo')}
                   />
                 )
               }}
@@ -396,14 +379,14 @@ const AboutSettings = () => {
           </div>
           <Hyperlink
             label={t('settingsPage.emailContact')}
-            link="mailto:sandakannipunajith@gmail.com?subject=Regarding Nora&body=If you found a bug in the app, please try to attach the log file of the app with a detailed explanation of the bug.%0d%0a%0d%0aYou can get to it by going to  Settings > About > Open Log File."
+            link="mailto:sandakannipunajith@gmail.com?subject=Regarding SyncTax Desktop&body=If you found a bug in the app, please try to attach the log file of the app with a detailed explanation of the bug.%0d%0a%0d%0aYou can get to it by going to  Settings > About > Open Log File."
             linkTitle={t('settingsPage.emailContact')}
             noValidityCheck
           />
           <br />
           <div className="mt-6 text-sm">
             <Trans
-              i18nKey="settingsPage.loveNora"
+              i18nKey="settingsPage.lovesynctax"
               components={{
                 span: (
                   <span className="heart text-font-color-crimson dark:text-font-color-crimson" />

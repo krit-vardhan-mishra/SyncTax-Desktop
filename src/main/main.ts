@@ -25,7 +25,7 @@ import {
 } from 'electron';
 
 import { version, appPreferences } from '../../package.json';
-import noraAppIcon from '../../resources/logo_light_mode.png?asset';
+import synctaxAppIcon from '../../resources/logo_light_mode.png?asset';
 import roundTo from '../common/roundTo';
 import manageLastFmAuth from './auth/manageLastFmAuth';
 import changeAppTheme from './core/changeAppTheme';
@@ -49,7 +49,7 @@ import checkForUpdates from './update';
 import { savePendingMetadataUpdates } from './updateSong/updateSongId3Tags';
 
 // / / / / / / / CONSTANTS / / / / / / / / /
-const DEFAULT_APP_PROTOCOL = 'nora';
+const DEFAULT_APP_PROTOCOL = 'synctax';
 
 const MAIN_WINDOW_MIN_SIZE_X = 700;
 const MAIN_WINDOW_MIN_SIZE_Y = 500;
@@ -98,9 +98,9 @@ let powerSaveBlockerId: number | null;
 let currentWindowZoomFactor = MAIN_WINDOW_DEFAULT_ZOOM_FACTOR;
 
 // / / / / / / INITIALIZATION / / / / / / /
-app.setName('Nora');
+app.setName('SyncTaxDesktop');
 if (process.platform === 'win32') {
-  app.setAppUserModelId('com.sandakannipunajith.nora');
+  app.setAppUserModelId('com.synctax.desktop');
 }
 
 // Behaviour on second instance for parent process
@@ -113,7 +113,7 @@ if (!hasSingleInstanceLock) {
 export const IS_DEVELOPMENT = !app.isPackaged || process.env.NODE_ENV === 'development';
 
 const appIcon = nativeImage
-  .createFromPath(noraAppIcon)
+  .createFromPath(synctaxAppIcon)
   .resize(process.platform === 'darwin' ? { width: 15, height: 15 } : { width: 50, height: 50 });
 
 // dotenv.config({ debug: true });
@@ -137,7 +137,7 @@ const APP_INFO = {
   }
 };
 
-logger.debug(`Starting up Nora`, { APP_INFO });
+logger.debug(`Starting up SyncTax Desktop`, { APP_INFO });
 
 function launchExtensionBackgroundWorkers(session = electronSession.defaultSession) {
   return Promise.all(
@@ -230,7 +230,7 @@ const createWindow = async () => {
     height: 700,
     minHeight: 500,
     minWidth: 700,
-    title: 'Nora',
+    title: 'SyncTax Desktop',
     webPreferences: {
       zoomFactor: currentWindowZoomFactor,
       preload: path.resolve(import.meta.dirname, '../preload/index.mjs')
@@ -270,7 +270,7 @@ const createWindow = async () => {
 
 protocol.registerSchemesAsPrivileged([
   {
-    scheme: 'nora',
+    scheme: 'synctax',
     privileges: {
       standard: true,
       secure: true,
@@ -360,13 +360,13 @@ app
       else logger.warn('Default protocol registration failed.');
     }
 
-    // protocol.registerFileProtocol('nora', registerFileProtocol);
-    protocol.handle('nora', handleFileProtocol);
+    // protocol.registerFileProtocol('synctax', registerFileProtocol);
+    protocol.handle('synctax', handleFileProtocol);
 
     tray = new Tray(appIcon);
     const trayContextMenu = Menu.buildFromTemplate([
       {
-        label: 'Show/Hide Nora',
+        label: 'Show/Hide SyncTax Desktop',
         type: 'normal',
         click: () => (mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()),
         role: 'hide'
@@ -376,7 +376,7 @@ app
     ]);
 
     tray.setContextMenu(trayContextMenu);
-    tray.setToolTip('Nora');
+    tray.setToolTip('SyncTax Desktop');
 
     tray.addListener('click', () => tray.popUpContextMenu(trayContextMenu));
     tray.addListener('double-click', () => {
@@ -509,7 +509,7 @@ async function handleBeforeQuit() {
       mainWindow.webContents.send('app/beforeQuitEvent');
       await closeDatabaseInstance();
 
-      logger.debug(`Quiting Nora`, { uptime: `${Math.floor(process.uptime())} seconds` });
+      logger.debug(`Quiting SyncTax Desktop`, { uptime: `${Math.floor(process.uptime())} seconds` });
       asyncOperationDone = true;
     } catch (error) {
       asyncOperationDone = true;
@@ -572,7 +572,7 @@ function addEventsToCache(dataType: DataUpdateEventTypes, data = [] as number[],
 
 // function registerFileProtocol(request: { url: string }, callback: (arg: string) => void) {
 //   const urlWithQueries = decodeURI(request.url).replace(
-//     /nora:[/\\]{1,2}localfiles[/\\]{1,2}/gm,
+//     /synctax:[/\\]{1,2}localfiles[/\\]{1,2}/gm,
 //     ''
 //   );
 
@@ -589,14 +589,14 @@ function addEventsToCache(dataType: DataUpdateEventTypes, data = [] as number[],
 // const handleFileProtocol = async (request: GlobalRequest): Promise<GlobalResponse> => {
 //   try {
 //     const urlWithQueries = decodeURI(request.url).replace(
-//       /(nora:[\/\\]{1,2}localfiles[\/\\]{1,2})|(\?ts\=\d+$)?/gm,
+//       /(synctax:[\/\\]{1,2}localfiles[\/\\]{1,2})|(\?ts\=\d+$)?/gm,
 //       ''
 //     );
 //     let [fileDir] = urlWithQueries.split('?');
 
 //     if (os.platform() === 'darwin') fileDir = '/' + fileDir;
 
-//     // logger.verbose('Serving file from nora://', { filePath });
+//     // logger.verbose('Serving file from synctax://', { filePath });
 
 //     const asFileUrl = pathToFileURL(fileDir).toString();
 //     const filePath = fileURLToPath(asFileUrl);
@@ -699,7 +699,7 @@ async function handleSecondInstances(_: unknown, argv: string[]) {
 
 function manageSecondInstanceArgs(args: string[]) {
   for (const arg of args) {
-    if (arg.includes('nora://auth')) return manageAuthServices(arg);
+    if (arg.includes('synctax://auth')) return manageAuthServices(arg);
   }
   return undefined;
 }
@@ -934,7 +934,7 @@ export async function toggleAutoLaunch(autoLaunchState: boolean) {
 
   app.setLoginItemSettings({
     openAtLogin: autoLaunchState,
-    name: 'Nora',
+    name: 'SyncTax Desktop',
     openAsHidden: openWindowAsHiddenOnSystemStart
   });
 

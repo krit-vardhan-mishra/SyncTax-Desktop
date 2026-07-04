@@ -23,8 +23,8 @@
           { "note": "Original lyric will now be shown along with the translated lyric." },
           { "note": "Added support for reading LRC files without the relevant song extension." },
           { "note": "Added support for symbolic links in file paths. Thanks @Brunight." },
-          { "note": "Configured to build Nora in the rpm package" },
-          { "note": "Configured to build Nora for arm systems." },
+          { "note": "Configured to build SyncTax Desktop in the rpm package" },
+          { "note": "Configured to build SyncTax Desktop for arm systems." },
           { "note": "Added support for copying lyrics lines." },
           { "note": "Added a blurred background for the full and mini player." },
           {
@@ -74,14 +74,14 @@
             "note": "Fixed lyrics that were not updated on LyricsPage right after modifying them in LyricsEditingPage."
           },
           { "note": "Fixed lyrics lines in LyricsEditingPage don't follow dynamic theme colors." },
-          { "note": "Fixed app name showing \"Electron\" instead of Nora." },
+          { "note": "Fixed app name showing \"Electron\" instead of SyncTax Desktop." },
           { "note": "Removed full-screen player that starts with lyrics showing." },
           {
             "note": "Updated discord-rich-presence to display the current song position. Thanks @ElectroHeavenVN."
           },
           { "note": "Fixed song filenames cut off at periods." },
           {
-            "note": "Added a fix for file names with special characters that cannot be played in Nora player."
+            "note": "Added a fix for file names with special characters that cannot be played in SyncTax Desktop player."
           },
           {
             "note": "Set true to disable background artworks as default to improve app accessibility and to maintain text contrast."
@@ -93,7 +93,7 @@
           { "note": "Fixed translated lyrics do not show their original lyric above them." },
           { "note": "Added a fix for image alignment issues." },
           {
-            "note": "Added a fix for the app description shown when Nora is viewed in Task Manager."
+            "note": "Added a fix for the app description shown when SyncTax Desktop is viewed in Task Manager."
           },
           { "note": "Fixed the like button not working in the mini-player." },
           { "note": "Fixed incorrect song ordering in playlists." },
@@ -106,10 +106,10 @@
           }
         ],
         "developerUpdates": [
-          { "note": "Nora was fully converted to an ESM-packaged app." },
+          { "note": "SyncTax Desktop was fully converted to an ESM-packaged app." },
           { "note": "Fixed some localization errors in the en.json file." },
           {
-            "note": "Updated the build workflow to fix a bug for the Nora app that is missing sharp dependencies in Linux environments."
+            "note": "Updated the build workflow to fix a bug for the SyncTax Desktop app that is missing sharp dependencies in Linux environments."
           },
           { "note": "Updated app dependencies." }
         ]
@@ -127,7 +127,7 @@
           { "note": "Added an experimental full-screen player mode. Fixes #222." },
           { "note": "Added support for translating lyrics. Fixes #239." },
           { "note": "Added support for dynamic themes based on the currently playing song." },
-          { "note": "Added experimental support auto-updating Nora." },
+          { "note": "Added experimental support auto-updating SyncTax Desktop." },
           { "note": "Added support for navigation between prompts for supported prompts." },
           {
             "note": "Greatly reduced unnecessary re-renders in turn improving overall performance."
@@ -148,9 +148,9 @@
           {
             "note": "Greatly improved palette generation duration. (90% faster)"
           },
-          { "note": "Fixed some localization bugs in Nora." },
+          { "note": "Fixed some localization bugs in SyncTax Desktop." },
           {
-            "note": "Fixed a bug where Nora doesn't send albumArtist data when scrobbling songs."
+            "note": "Fixed a bug where SyncTax Desktop doesn't send albumArtist data when scrobbling songs."
           },
           {
             "note": "Improved performance when sending scrobbling and now playing data to Last.fm."
@@ -159,7 +159,7 @@
             "note": "Fixed a bug where albums related to artists are not shown."
           },
           {
-            "note": "Fixed a bug where special characters are not shown when localizing text in Nora."
+            "note": "Fixed a bug where special characters are not shown when localizing text in SyncTax Desktop."
           },
           {
             "note": "Fixed a bug where metadata updates of songs outside the library fail."
@@ -186,7 +186,7 @@
             "note": "ListeningActivityBarGraph now shows ListeningActivityBars according to the available width."
           },
           {
-            "note": "Added a possible fix to a missing dependency for Nora when launching in Linux-based operating systems."
+            "note": "Added a possible fix to a missing dependency for SyncTax Desktop when launching in Linux-based operating systems."
           },
           { "note": "Improved animations in notifications." },
           {
@@ -200,7 +200,7 @@
             "note": "Fixed a bug where importing the Favorites playlist will make the app unresponsive due to many like/dislike notifications."
           },
           {
-            "note": "Fixed a bug where Nora will forget about sub-folders inside parent folders."
+            "note": "Fixed a bug where SyncTax Desktop will forget about sub-folders inside parent folders."
           },
           {
             "note": "Improved app performance when displaying synced lyrics."
@@ -209,7 +209,7 @@
             "note": "Fixed a bug where lyrics copyright info is positioned incorrectly in the full-screen player."
           },
           {
-            "note": "Fixed a bug where Nora doesn't check for LRC files in the custom LRC file path."
+            "note": "Fixed a bug where SyncTax Desktop doesn't check for LRC files in the custom LRC file path."
           },
           {
             "note": "Fixed a bug where lyrics with the same timestamps don't appear correctly."
@@ -296,9 +296,9 @@
         ],
         "knownIssues": [],
         "new": [
-          { "note": "Added localization support for Nora." },
+          { "note": "Added localization support for SyncTax Desktop." },
           {
-            "note": "Added a setting to change the language in Nora."
+            "note": "Added a setting to change the language in SyncTax Desktop."
           },
           {
             "note": "Added support for reading album artists in songs."
@@ -379,7 +379,7 @@
         ],
         "knownIssues": [
           {
-            "note": "Nora may fail to load some FLAC songs."
+            "note": "SyncTax Desktop may fail to load some FLAC songs."
           }
         ],
         "new": []
@@ -406,7 +406,7 @@
         ],
         "knownIssues": [
           {
-            "note": "Nora may fail to load some FLAC songs."
+            "note": "SyncTax Desktop may fail to load some FLAC songs."
           }
         ],
         "new": []
@@ -417,7 +417,7 @@
     {
       "artwork": "/resources/other/release artworks/whats-new-v2.4.0-stable.webp",
       "importantNotes": [
-        "This update fixes the bug where Nora crashes saying 'ENCRYPTION_SECRET not found'."
+        "This update fixes the bug where SyncTax Desktop crashes saying 'ENCRYPTION_SECRET not found'."
       ],
       "notes": {
         "fixed": [
@@ -427,7 +427,7 @@
         ],
         "knownIssues": [
           {
-            "note": "Nora may fail to load some FLAC songs."
+            "note": "SyncTax Desktop may fail to load some FLAC songs."
           }
         ],
         "new": []
@@ -511,12 +511,12 @@
         ],
         "knownIssues": [
           {
-            "note": "Nora may fail to load some FLAC songs."
+            "note": "SyncTax Desktop may fail to load some FLAC songs."
           }
         ],
         "new": [
           {
-            "note": "Added support for authenticating Last.FM users from Nora."
+            "note": "Added support for authenticating Last.FM users from SyncTax Desktop."
           },
           {
             "note": "Added support for Last.Fm scrobbling."
@@ -537,7 +537,7 @@
             "note": "Added a feature that shows unavailable tracks and a summary of the album when in the AlbumInfoPage."
           },
           {
-            "note": "Added support for saving the window state so that Nora starts from the previous window state (e.g.: full-screen)."
+            "note": "Added support for saving the window state so that SyncTax Desktop starts from the previous window state (e.g.: full-screen)."
           },
           {
             "note": "Added support for viewing both synchronized and Un-synchronized lyrics in the SongTagsEditingPage."
@@ -633,7 +633,7 @@
             "note": "Fixed some styling issues in SongTagsEditingPage."
           },
           {
-            "note": "Linked Nora's website to the app."
+            "note": "Linked SyncTax Desktop's website to the app."
           },
           {
             "note": "Moved lyrics-related settings from the Audio Playback section to the new 'Lyrics' section in Settings."
@@ -648,7 +648,7 @@
             "note": "Moved musixmatch metadata result from the bottom of the list to the top."
           },
           {
-            "note": "Linked Nora's official website to the app."
+            "note": "Linked SyncTax Desktop's official website to the app."
           },
           {
             "note": "Improved the render cycle timings to improve app performance."
@@ -680,12 +680,12 @@
         ],
         "knownIssues": [
           {
-            "note": "Nora may fail to load some FLAC songs."
+            "note": "SyncTax Desktop may fail to load some FLAC songs."
           }
         ],
         "new": [
           {
-            "note": "Added support for enhanced synced lyrics in Nora (Experimental)."
+            "note": "Added support for enhanced synced lyrics in SyncTax Desktop (Experimental)."
           },
           {
             "note": "Added support for syncing unsynced lyrics right from the app (Experimental)."
@@ -723,7 +723,7 @@
       "artwork": "/resources/other/release artworks/whats-new-v2.2.0-stable.webp",
       "importantNotes": [
         "This update fixes the new update notification bug.",
-        "From this update onwards, I will add Linux installers for Nora. Keep in mind that even though Nora is stable on Windows, it may not be stable on Linux. Since I won't be able to test Linux builds on my machine, I will be relying on user feedback for Linux build improvements."
+        "From this update onwards, I will add Linux installers for SyncTax Desktop. Keep in mind that even though SyncTax Desktop is stable on Windows, it may not be stable on Linux. Since I won't be able to test Linux builds on my machine, I will be relying on user feedback for Linux build improvements."
       ],
       "notes": {
         "fixed": [
@@ -762,7 +762,7 @@
             "note": "Added the feature to save some images that appear in the app."
           },
           {
-            "note": "Added an experimental fix for the bug where other music players like Groove Music don't recognize artworks edited by Nora."
+            "note": "Added an experimental fix for the bug where other music players like Groove Music don't recognize artworks edited by SyncTax Desktop."
           },
           {
             "note": "Added a new keyboard shortcut to quickly navigate to Search. Fixes #173."
@@ -884,7 +884,7 @@
             "note": "Added a feature to show the details of the song when right-clicking to get the context menu."
           },
           {
-            "note": "Linked the new Nora Official Discord server with the app."
+            "note": "Linked the new SyncTax Desktop Official Discord server with the app."
           },
           {
             "note": "Now, the SearchPage won't limit the no of results you can see to 5 on some components."
@@ -1034,7 +1034,7 @@
             "note": "Improved accessibility in SongTagsEditingPage."
           },
           {
-            "note": "Fixed a bug where the F5 shortcut to reload doesn't work for other programs when Nora is opened."
+            "note": "Fixed a bug where the F5 shortcut to reload doesn't work for other programs when SyncTax Desktop is opened."
           },
           {
             "note": "Fixed a bug where resetting the app doesn't clear local storage data."
@@ -1160,7 +1160,7 @@
     },
     {
       "artwork": "/resources/other/release artworks/whats-new-v1.2.0-stable.webp",
-      "importantNotes": ["This release provides accessibility improvements throughout Nora."],
+      "importantNotes": ["This release provides accessibility improvements throughout SyncTax Desktop."],
       "notes": {
         "fixed": [
           {
@@ -1527,7 +1527,7 @@
         ],
         "new": [
           {
-            "note": "Now Nora can read and write to audio files with synchronisedLyrics meta tag (Experimental)."
+            "note": "Now SyncTax Desktop can read and write to audio files with synchronisedLyrics meta tag (Experimental)."
           },
           {
             "note": "Lyrics from Musixmatch. (Experimental)"
@@ -1693,7 +1693,7 @@
         ],
         "new": [
           {
-            "note": "Double-clicking on a supported song in the File Explorer would play it on the app. Be sure if you made Nora the default audio player for the respective audio file. (Experimental)"
+            "note": "Double-clicking on a supported song in the File Explorer would play it on the app. Be sure if you made SyncTax Desktop the default audio player for the respective audio file. (Experimental)"
           },
           {
             "note": "Now users can drag and drop a supported audio file to play it on the player. (Experimental)"

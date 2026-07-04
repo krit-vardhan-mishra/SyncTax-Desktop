@@ -1,13 +1,13 @@
-# Nora - GitHub Copilot Instructions
+# SyncTax Desktop - GitHub Copilot Instructions
 
-> **AI Coding Agent Guidelines for Nora Music Player**  
+> **AI Coding Agent Guidelines for SyncTax Desktop Music Player**  
 > Generated to help AI agents understand architectural patterns, conventions, and development workflows.
 
 ---
 
 ## 🎯 Project Overview
 
-**Nora** is an elegant, feature-rich music player built with Electron and React, inspired by Oto Music (Android). It
+**SyncTax Desktop** is an elegant, feature-rich music player built with Electron and React, inspired by Oto Music (Android). It
 emphasizes simplicity, beautiful design, and essential music management features that default music apps often lack.
 
 ### Core Technologies
@@ -40,7 +40,7 @@ emphasizes simplicity, beautiful design, and essential music management features
 ## 📁 Project Structure
 
 ```
-nora/
+synctax/
 ├── src/
 │   ├── main/                    # Electron main process
 │   │   ├── main.ts             # Entry point: window management, IPC setup
@@ -84,7 +84,7 @@ nora/
 
 ## 🖥️ Main Process Architecture (Electron)
 
-The main process is the heart of Nora's Electron application, handling system-level operations, database management,
+The main process is the heart of SyncTax Desktop's Electron application, handling system-level operations, database management,
 file system watching, and IPC communication.
 
 ### Main Process Entry Point (`src/main/main.ts`)
@@ -98,7 +98,7 @@ file system watching, and IPC communication.
 - Power management (prevent sleep, battery detection)
 - System theme watching
 - Single instance lock enforcement
-- Protocol handling (`nora://` custom protocol)
+- Protocol handling (`synctax://` custom protocol)
 - Auto-launch configuration
 
 **Key Variables** (module-level state):
@@ -137,7 +137,7 @@ MINI_PLAYER_ASPECT_RATIO = 17/10
 **System Integration**:
 
 - **Single Instance**: Uses `app.requestSingleInstanceLock()` to prevent multiple instances
-- **Custom Protocol**: Registers `nora://` for file associations and auth callbacks (Last.fm)
+- **Custom Protocol**: Registers `synctax://` for file associations and auth callbacks (Last.fm)
 - **Tray Menu**: Show/hide app, exit option
 - **Global Shortcuts**: F12 (devtools in development)
 - **Power Monitor**: Detect AC/battery status, prevent display sleep during playback
@@ -387,7 +387,7 @@ export default async function toggleLikeSongs(songIds: string[], isLikeSong?: bo
 - `checkFolderForContentModifications.ts`: Detect new/deleted songs
 - `checkForFolderModifications.ts`: Handle folder renames/moves
 - `controlAbortControllers.ts`: Cancellation for long-running watchers
-- `resolveFilePaths.ts`: Path normalization (handle `nora://` protocol)
+- `resolveFilePaths.ts`: Path normalization (handle `synctax://` protocol)
 
 **Watcher Pattern**:
 
@@ -411,7 +411,7 @@ abortController.signal.addEventListener('abort', () => watcher.close());
 1. **Artwork Management** (`artworks.ts`):
    - Extract embedded artwork from audio files
    - Cache artwork to temp directory
-   - Generate artwork URLs (`nora://localfiles/...`)
+   - Generate artwork URLs (`synctax://localfiles/...`)
 
 2. **Discord Rich Presence** (`discordRPC.ts`):
    - Integration with Discord RPC library
@@ -1127,7 +1127,7 @@ For detailed TanStack Query patterns, see the **TanStack Query Patterns skill**.
 ### Agent Skills
 
 - **TanStack Query Patterns** (`.agents/skills/tanstack-query-patterns/SKILL.md`): Comprehensive guide for creating and
-  consuming queries following Nora conventions (query module organization, file structure, error handling, cache
+  consuming queries following SyncTax Desktop conventions (query module organization, file structure, error handling, cache
   invalidation, debugging)
 
 ---
@@ -1159,5 +1159,5 @@ When making changes:
 
 ---
 
-_This document is maintained to help AI coding agents be immediately productive in the Nora codebase. Update as
+_This document is maintained to help AI coding agents be immediately productive in the SyncTax Desktop codebase. Update as
 architectural patterns evolve._

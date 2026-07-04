@@ -13,7 +13,7 @@ import { useAppUpdates } from './hooks/useAppUpdates';
 import { useAudioPlayer } from './hooks/useAudioPlayer';
 import { useContextMenu } from './hooks/useContextMenu';
 import { useDataSync } from './hooks/useDataSync';
-import { useDiscordRpc } from './hooks/useDiscordRpc';
+
 import { useDynamicTheme } from './hooks/useDynamicTheme';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import { useListeningData } from './hooks/useListeningData';
@@ -249,7 +249,7 @@ export default function App() {
 
   // ? INITIALIZE DISCORD RPC
   // Discord RPC hook handles Discord Rich Presence integration
-  useDiscordRpc(audio);
+
 
   // Set up keyboard shortcuts with all required dependencies
   useKeyboardShortcuts({

@@ -39,7 +39,7 @@ const fetchLyricsFromAudioSource = async (songPath: string) => {
 
       return undefined;
     }
-    logger.warn(`Nora doesn't support reading lyrics metadata from songs in ${songExt} format.`, {
+    logger.warn(`SyncTax Desktop doesn't support reading lyrics metadata from songs in ${songExt} format.`, {
       songPath,
       songExt
     });

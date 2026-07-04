@@ -1,10 +1,8 @@
 import { useStore } from '@tanstack/react-store';
 import { memo } from 'react';
 
-import { version } from '../../../../../package.json';
 import LightModeLogo from '../../assets/images/webp/logo_light_mode.webp';
 import { store } from '../../store/store';
-import { getVersionInfoFromString } from '../../utils/isLatestVersion';
 import Img from '../Img';
 import CurrentLocationContainer from './CurrentLocationContainer';
 import NetworkIndicator from './indicators/NetworkIndicator';
@@ -13,8 +11,6 @@ import NavigationControlsContainer from './NavigationControlsContainer';
 import ChangeThemeBtn from './special_controls/ChangeThemeBtn';
 import GoToMainPlayerBtn from './special_controls/GoToMainPlayerBtn';
 import WindowControlsContainer from './WindowControlsContainer';
-
-const appReleasePhase = getVersionInfoFromString(version)?.releasePhase || 'stable';
 
 const TitleBar = memo(() => {
   const bodyBackgroundImage = useStore(store, (state) => state.bodyBackgroundImage);
@@ -34,20 +30,12 @@ const TitleBar = memo(() => {
             <Img
               className="mr-2 h-7 rounded-md p-1 shadow-md"
               src={LightModeLogo}
-              alt="Nora Logo"
+              alt="SyncTax Logo"
             />
           </span>
           <span className="app-name-container">
             <span>
-              Nora
-              <sup
-                className={`app-version text-font-color-highlight dark:text-dark-font-color-highlight ml-1 cursor-pointer text-[0.6rem] font-semibold uppercase ${
-                  bodyBackgroundImage && 'text-dark-font-color-highlight!'
-                } `}
-                title={`v${version}`}
-              >
-                {appReleasePhase}
-              </sup>
+              SyncTax
             </span>
           </span>
         </div>

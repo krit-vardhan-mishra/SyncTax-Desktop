@@ -28,7 +28,7 @@ const ReleaseNotesAppUpdateInfo = (props: { state: AppUpdatesState }) => {
             <Hyperlink
               className="font-base text-font-color-highlight-2 dark:text-dark-font-color-highlight-2 text-sm underline"
               link={`${repository.url}/releases`}
-              linkTitle={t('releaseNotesPrompt.noraReleases')}
+              linkTitle={t('releaseNotesPrompt.synctaxReleases')}
             />
           )
         }}

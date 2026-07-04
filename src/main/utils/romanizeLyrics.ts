@@ -66,7 +66,7 @@ const romanizeLyrics = async () => {
     const { title, artist, album, lang, length, offset, copyright } =
       getLrcLyricsMetadata(cachedLyrics);
 
-    lyricsArr.push(`[re:Nora (https://github.com/Sandakan/Nora)]`);
+    lyricsArr.push(`[re:SyncTax Desktop (https://github.com/krit-vardhan-mishra/SyncTax-Desktop)]`);
     lyricsArr.push(`[ve:${version}]`);
     lyricsArr.push(`[ti:${title}]`);
 

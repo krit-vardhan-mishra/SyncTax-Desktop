@@ -359,7 +359,7 @@ export const parsePlaylistArtworks = (
 
 export const removeDefaultAppProtocolFromFilePath = (filePath: string) => {
   const strippedPath = filePath.replaceAll(
-    /nora:[/\\]{1,2}localfiles[/\\]{1,2}|\?[\w+=\w+&?]+$/gm,
+    /synctax:[/\\]{1,2}localfiles[/\\]{1,2}|\?[\w+=\w+&?]+$/gm,
     ''
   );
 
@@ -368,5 +368,5 @@ export const removeDefaultAppProtocolFromFilePath = (filePath: string) => {
 };
 
 export const addDefaultAppProtocolToFilePath = (filePath: string) => {
-  return joinPath('nora://localfiles/', filePath);
+  return joinPath('synctax://localfiles/', filePath);
 };

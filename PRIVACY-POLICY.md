@@ -1,10 +1,10 @@
-# Privacy Policy for Nora
+# Privacy Policy for SyncTax Desktop
 
-Nora is committed to protecting your privacy. This privacy policy outlines our practices regarding data collection and usage.
+SyncTax Desktop is committed to protecting your privacy. This privacy policy outlines our practices regarding data collection and usage.
 
-- Nora does not collect, store, or share personally-identifiable information.
-- Nora does not require users to create an account, log in, or provide any identifying details.
-- Nora does not sell, share, or disclose personal informastion to third parties.
+- SyncTax Desktop does not collect, store, or share personally-identifiable information.
+- SyncTax Desktop does not require users to create an account, log in, or provide any identifying details.
+- SyncTax Desktop does not sell, share, or disclose personal informastion to third parties.
 
 ## Changes to This Policy
 

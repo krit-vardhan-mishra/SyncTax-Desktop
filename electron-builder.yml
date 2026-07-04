@@ -1,12 +1,12 @@
-appId: com.sandakannipunajith.nora
-productName: Nora
-executableName: Nora
-copyright: Copyright © 2024 Sandakan Nipunajith
+appId: com.synctax.desktop
+productName: SyncTax Desktop
+executableName: SyncTax-Desktop
+copyright: Copyright © 2026 krit-vardhan-mishra
 icon: ./build/icon.ico
 artifactName: '${productName} v${version}-${os}-${arch}.${ext}'
 
 extraMetadata:
-  description: Nora
+  description: SyncTax Desktop
 
 directories:
   buildResources: build
@@ -63,7 +63,7 @@ fileAssociations:
     role: Editor
 
 win:
-  executableName: Nora
+  executableName: SyncTax-Desktop
   target:
     - target: nsis
       arch:
@@ -109,11 +109,11 @@ linux:
     - rpm
     # - dir
   category: AudioVideo
-  synopsis: 'An elegant music player built using Electron and React. Inspired by Oto Music for Android by Piyush Mamidwar.'
+  synopsis: 'An elegant, hybrid music player for the desktop. Built on top of SyncTax Desktop and inspired by SyncTax for Android.'
 
 npmRebuild: false
 
 protocols:
-  name: nora-protocol
+  name: synctax-protocol
   schemes:
-    - nora
+    - synctax

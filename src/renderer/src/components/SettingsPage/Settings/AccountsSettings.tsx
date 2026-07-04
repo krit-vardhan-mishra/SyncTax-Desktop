@@ -17,13 +17,7 @@ const AccountsSettings = () => {
     [userSettings?.lastFmSessionKey]
   );
 
-  const { mutate: updateDiscordRpcState } = useMutation({
-    mutationFn: (enableDiscordRpc: boolean) =>
-      window.api.settings.updateDiscordRpcState(enableDiscordRpc),
-    onSettled: () => {
-      queryClient.invalidateQueries(settingsQuery.all);
-    }
-  });
+
 
   const { mutate: updateSongScrobblingToLastFMState } = useMutation({
     mutationFn: (enableScrobbling: boolean) =>
@@ -59,15 +53,7 @@ const AccountsSettings = () => {
         {t('settingsPage.accounts')}
       </div>
       <ul className="marker:bg-background-color-3 dark:marker:bg-background-color-3 list-disc pl-6">
-        <li className="discord-rpc-integration mb-4">
-          <div className="description">{t('settingsPage.enableDiscordRpcDescription')}</div>
-          <Checkbox
-            id="enableDiscordRpc"
-            isChecked={userSettings?.enableDiscordRPC ?? false}
-            checkedStateUpdateFunction={(state) => updateDiscordRpcState(state)}
-            labelContent={t('settingsPage.enableDiscordRpc')}
-          />
-        </li>
+
         <li className="last-fm-integration mb-4">
           <div className="description">{t('settingsPage.integrateLastFm')}</div>
           <div className="flex p-4 pb-0">

@@ -62,7 +62,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           draft: true
-          name: Nora Release ${{ github.ref }} ${{ github.sha }}
+          name: SyncTax Desktop Release ${{ github.ref }} ${{ github.sha }}
           files: |
             dist/*.exe
             dist/*.zip

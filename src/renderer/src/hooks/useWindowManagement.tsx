@@ -161,9 +161,9 @@ export function useWindowManagement(
       }`;
   }, []);
 
-  /** Resets the browser/window title bar to the default "Nora" title. */
+  /** Resets the browser/window title bar to the default "SyncTax Desktop" title. */
   const resetTitleBarInfo = useCallback(() => {
-    document.title = `Nora`;
+    document.title = `SyncTax Desktop`;
   }, []);
 
   /**
