@@ -1,7 +1,5 @@
 <div align="center">
 
-<img src="resources/other/nora_logo_banner.webp" alt="SyncTax Logo">
-
 # SyncTax Desktop
 
 ### An elegant, hybrid music player for the modern desktop
@@ -53,9 +51,6 @@ SyncTax Desktop is ready to use and doesn't require any command-line setup or bu
 ## 📸 Gallery & Screenshots
 
 Here is a preview of the clean, beautiful user interface:
-
-![SyncTax Banner Artwork](/resources/other/artwork%200.webp)
-
 ![Support for Online and Offline Lyrics](/resources/other/artwork%201.webp)
 
 ![Switch between Dark and Light Modes](/resources/other/artwork%202.webp)
