@@ -1,70 +1,60 @@
 <div align="center">
 
-<img src="resources/other/nora_logo_banner.webp" alt="Nora Logo">
+<img src="resources/other/nora_logo_banner.webp" alt="SyncTax Logo">
 
-# Nora Player
+# SyncTax Desktop
 
-### An elegant music player for the modern desktop
-
-Built with Electron and React • Inspired by [Oto Music](https://play.google.com/store/apps/details?id=com.piyush.music&gl=us)
-
-![GitHub all releases](https://img.shields.io/github/downloads/Sandakan/Nora/total?label=all%20time%20downloads&style=for-the-badge)
-![GitHub release (latest by date)](https://img.shields.io/github/downloads/Sandakan/Nora/v3.1.0-stable/total?style=for-the-badge)
-![GitHub package.json version](https://img.shields.io/github/package-json/v/Sandakan/Nora?color=blue&label=latest%20version&style=for-the-badge)
-
-[![GitHub license](https://img.shields.io/github/license/Sandakan/Nora?style=for-the-badge)](https://github.com/Sandakan/Nora/blob/master/LICENSE)
-[![GitHub issues](https://img.shields.io/github/issues/Sandakan/Oto-Music-for-Desktop?style=for-the-badge)](https://github.com/Sandakan/Nora/issues)
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Sandakan/Nora/build.yml?branch=master&style=for-the-badge)
-
-[![Crowdin](https://badges.crowdin.net/nora/localized.svg)](https://crowdin.com/project/nora)
-
-[Download](https://github.com/Sandakan/Nora/releases/latest) • [Features](#-features) • [Build Guide](#-build-from-source) • [Changelog](/changelog.md) • [Discord](https://discord.gg/c5rGKnBs4y)
+### An elegant, hybrid music player for the modern desktop
+Built with Electron and React • Offline & Online Playback • Ad-Free Streaming
 
 </div>
 
 ---
 
-## 🎯 Why Nora?
+## 🎯 What is SyncTax Desktop?
 
-Nora reimagines desktop music playback with thoughtful design and powerful features. Built to overcome the limitations of default music apps, it provides an intuitive and beautiful experience that puts your music front and center.
+**SyncTax Desktop** is a beautiful, modern media player that merges local file organization with online streaming. 
 
-![Nora Banner Artwork](/resources/other/artwork%200.webp)
+Originally built on top of the elegant offline music player **Nora**, SyncTax Desktop extends the application into a dual-purpose player. It gives you full control over your local library while introducing seamless, ad-free online music searches and playback without the need to download or store files locally.
+
+---
 
 ## ✨ Features
 
-**Library Management**
+### 📁 Legacy (Offline Library Management)
+SyncTax Desktop inherits the robust core capabilities of local library playbacks:
+* **Library Organization**: Manage songs, artists, albums, and custom playlists.
+* **Metadata Editor**: Conveniently update song tags directly within the app.
+* **Lyrics Syncing**: View and synchronize offline lyrics.
+* **Last.FM Integration**: Scrobble tracks automatically to track your listening history.
+* **Mini-Player**: Compact player overlay for distraction-free listening.
 
-- ✅ Organize songs, artists, albums, and playlists with ease
-- ✅ Advanced search with smart song filters
-- ✅ Edit song metadata easily and conveniently[^3]
+### 🌐 New Additions (Online Streaming & Reliability)
+We have added features to turn the player into a hybrid streaming platform:
+* **Ad-Free Online Streaming**: Search and stream millions of tracks on-demand without commercial interruptions.
+* **Smart Up-Next Recommendations**: Automatically queue similar tracks based on your currently playing online song.
+* **Premium OS Media Integration**: Correct application naming ("SyncTax Desktop") and artwork rendering in the Windows System Media Transport Controls (SMTC). 
+* **Pre-fetched Artwork Buffers**: Online artwork is fetched on the backend and fed locally to the system media integration to bypass browser Content Security Policies (CSP) and ensure thumbnails render correctly.
+* **yt-dlp Startup Guard**: Prevents playback startup error popups (like media format errors) by skipping online song restoration on start if the streaming binary is not yet installed.
+* **Silent Update Checker**: Background updater checks are completely silent during application startup, saving popup notifications only for manual checks.
 
-**Listening Experience**
+---
 
-- ✅ Sing along with song lyrics[^1]
-- ✅ Support for synced lyrics
-- ✅ Last.FM scrobbling integration
-- ✅ Mini-player mode for distraction-free listening
+## 📥 Download & Installation
 
-**Personalization**
+SyncTax Desktop is ready to use and doesn't require any command-line setup or building from source.
 
-- ✅ Keep favorite songs and artists close to you
-- ✅ Read your favorite artist's biography
-- ✅ Create playlists that meet your needs
-- ⏳ Personalized music shuffling[^2] (Upcoming)
+1. Head over to our **[Releases](https://github.com/krit-vardhan-mishra/SyncTax-Desktop/releases)** page on GitHub.
+2. Select and download the latest package matching your operating system (e.g., `.exe` for Windows).
+3. Run the installer to set up and launch the application on your device.
 
-**Customization**
+---
 
-- ✅ Switch between Light and Dark themes with ease
+## 📸 Gallery & Screenshots
 
-![Latest Version Artwork](/resources/other/release%20artworks/whats-new-v3.1.0-stable.webp)
+Here is a preview of the clean, beautiful user interface:
 
-Check out the [changelog](/changelog.md) to see what's new in the latest release.
-
-## 📥 Download
-
-Go to the **[Releases page](https://github.com/Sandakan/Nora/releases) > Assets > Choose your platform** or [download the latest version directly](https://github.com/Sandakan/Nora/releases/latest).
-
-## 📸 Gallery
+![SyncTax Banner Artwork](/resources/other/artwork%200.webp)
 
 ![Support for Online and Offline Lyrics](/resources/other/artwork%201.webp)
 
@@ -84,80 +74,10 @@ Go to the **[Releases page](https://github.com/Sandakan/Nora/releases) > Assets 
 
 ![Listen with the mini player](/resources/other/artwork%208.webp)
 
-## 💬 What People Say
-
-<div align="center">
-
-> _"A sleek music player with a modern design, this solution seeks to provide users with a seamless experience when it comes to listening to their favorite local tunes."_  
-> — Robert Condorache, [Softpedia](https://www.softpedia.com/get/Multimedia/Audio/Audio-Players/Oto-Music-for-Desktop.shtml)
-
 ---
 
-> _"The application interface adopts rounded corners in a large area, the fonts and icons are round and cute, and the visual effect is very comfortable."_  
-> — [Apps Worth Watching in the Near Future • SSPAI](https://sspai.com/post/78669)
+## 🔗 Credits & Attribution
 
----
+SyncTax Desktop is built as a customized, extended fork of the excellent open-source project **[Nora](https://github.com/Sandakan/Nora)** created by **[Sandakan Nipunajith](https://github.com/Sandakan)**. 
 
-> _"Just found the most beautiful music player for Windows: Nora"_  
-> — [r/windowsapps • Reddit](https://www.reddit.com/r/windowsapps/comments/11xgg99/just_found_the_most_beautiful_music_player_for/)
-
-</div>
-
-## 🛠 Build From Source
-
-Clone the repository
-
-```bash
-git clone https://github.com/Sandakan/Nora
-```
-
-Navigate to project folder
-
-```bash
-cd Nora
-```
-
-Install dependencies
-
-```bash
-npm install
-```
-
-Launch in development mode
-
-```bash
-npm start
-```
-
-## 📊 Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=Sandakan/Nora&type=Date)](https://star-history.com/#Sandakan/Nora&Date)
-
-## 🤝 Feedback & Contributing
-
-Have feedback, bug reports, or feature requests? Reach out through:
-
-- [Discord Server](https://discord.gg/c5rGKnBs4y)
-- [Email](mailto:sandakannipunajith@gmail.com)
-- [GitHub Issues](https://github.com/Sandakan/Nora/issues)
-
-Help translate Nora on [Crowdin](https://crowdin.com/project/nora)!
-
----
-
-<div align="center">
-
-Made with ❤️ by Sandakan Nipunajith  
-Love, Sri Lanka
-
-_All songs, artists, albums, and cover art used in demonstrations are property of their respective owners and used for illustrative purposes only. All copyrights are respected._
-
-</div>
-
----
-
-[^1]: Song lyrics use the [SongLyrics](https://www.npmjs.com/package/songlyrics) package and an implementation from the [MxLRC](https://github.com/fashni/MxLRC) package.
-
-[^2]: Personalized shuffles and playlists are generated by analyzing listening patterns and play counts.
-
-[^3]: Currently, the app only supports editing MP3 files due to dependency limitations.
+We are deeply grateful to Sandakan and all contributors of the original repository for creating the clean, elegant foundation of this media player.
