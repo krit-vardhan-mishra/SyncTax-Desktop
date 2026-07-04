@@ -19,8 +19,8 @@ const SearchResultsFilter = memo((props: SearchResultsFilterProp) => {
     <Button
       className={`appear-from-bottom text-font-color-black mr-3 flex w-fit cursor-pointer list-none items-center !border-0 outline-offset-1 transition-[width,background,color] duration-200 focus-visible:!outline ${
         isCurrentActiveFilter
-          ? 'active bg-background-color-3 dark:bg-dark-background-color-3 dark:text-font-color-black!'
-          : 'bg-background-color-2 hover:bg-background-color-3 dark:bg-dark-background-color-2 dark:text-font-color-white dark:hover:bg-dark-background-color-3 dark:hover:text-font-color-black!'
+          ? 'active bg-background-color-3 dark:bg-dark-background-color-3 text-font-color-highlight-2! dark:text-dark-font-color-highlight-2!'
+          : 'bg-background-color-2 hover:bg-background-color-3 dark:bg-dark-background-color-2 dark:text-font-color-white dark:hover:bg-dark-background-color-3 dark:hover:text-dark-font-color-highlight-2!'
       }`}
       clickHandler={() => changeActiveFilter(value)}
       label={label}

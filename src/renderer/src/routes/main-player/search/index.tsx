@@ -184,7 +184,7 @@ function SearchPage() {
             <Button
               className={`my-1! mr-2! ml-1! rounded-3xl! border-none px-4! py-2! shadow-sm outline-offset-1 focus-visible:outline! ${
                 isSimilaritySearchEnabled
-                  ? 'bg-background-color-3 dark:bg-dark-background-color-3 text-black!'
+                  ? 'bg-background-color-3 dark:bg-dark-background-color-3 text-font-color-highlight-2! dark:text-dark-font-color-highlight-2!'
                   : 'bg-background-color-1/50 text-font-color-highlight! hover:bg-background-color-1 focus-visible:bg-background-color-1 dark:bg-dark-background-color-1/50 dark:text-dark-font-color-highlight! dark:hover:bg-dark-background-color-1 dark:focus-visible:bg-dark-background-color-1'
               }`}
               iconName={isSimilaritySearchEnabled ? 'auto_fix' : 'auto_fix_off'}
@@ -231,7 +231,7 @@ function SearchPage() {
           <Button
             className={`ml-3! rounded-3xl! border-none px-4! py-2! shadow-sm outline-offset-1 focus-visible:outline! ${
               isOnlineSearch
-                ? 'bg-background-color-3 dark:bg-dark-background-color-3 text-black!'
+                ? 'bg-background-color-3 dark:bg-dark-background-color-3 text-font-color-highlight-2! dark:text-dark-font-color-highlight-2!'
                 : 'bg-background-color-1/50 text-font-color-highlight! hover:bg-background-color-1 focus-visible:bg-background-color-1 dark:bg-dark-background-color-1/50 dark:text-dark-font-color-highlight! dark:hover:bg-dark-background-color-1 dark:focus-visible:bg-dark-background-color-1'
             }`}
             iconName={isOnlineSearch ? 'language' : 'library_music'}
@@ -294,7 +294,7 @@ function SearchPage() {
                 )}
               </p>
               <Button
-                className="w-full! justify-center! bg-background-color-3 dark:bg-dark-background-color-3 text-black! font-semibold! py-3! rounded-xl! border-none!"
+                className="w-full! justify-center! bg-background-color-3 dark:bg-dark-background-color-3 text-font-color-highlight-2! dark:text-dark-font-color-highlight-2! font-semibold! py-3! rounded-xl! border-none!"
                 label={t('searchPage.downloadYtDlp', 'Download required components')}
                 clickHandler={startYtDlpDownload}
               />
