@@ -18,7 +18,7 @@ type Props<T extends object> = {
   scrollerRef?: any;
   useWindowScroll?: boolean;
   style?: CSSProperties;
-  synctaxngeUpdates?: boolean;
+  noRangeUpdates?: boolean;
   onChange?: (range: ListRange) => void;
   onDebouncedScroll?: (range: ListRange) => void;
 };

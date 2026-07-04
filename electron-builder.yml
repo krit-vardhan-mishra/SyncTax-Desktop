@@ -2,7 +2,7 @@ appId: com.synctax.desktop
 productName: SyncTax Desktop
 executableName: SyncTax-Desktop
 copyright: Copyright © 2026 krit-vardhan-mishra
-icon: ./build/icon.ico
+icon: ./build/icon.png
 artifactName: '${productName} v${version}-${os}-${arch}.${ext}'
 
 extraMetadata:
@@ -75,12 +75,10 @@ nsis:
   allowElevation: false
   allowToChangeInstallationDirectory: true
   createDesktopShortcut: true
-  installerIcon: ./build/icon.ico
   installerSidebar: ./build/installer_assets/sidebar.bmp
   license: ./LICENSE.txt
   oneClick: false
   perMachine: false
-  uninstallerIcon: ./build/icon.ico
 
 mac:
   category: public.app-category.music

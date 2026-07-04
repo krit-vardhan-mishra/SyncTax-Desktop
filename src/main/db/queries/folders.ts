@@ -4,6 +4,7 @@ import { and, eq, inArray, isNull } from 'drizzle-orm';
 
 import { db } from '../db';
 import { musicFolders } from '../schema';
+import logger from '../../logger';
 
 export const getAllFolders = async (trx: DB | DBTransaction = db) => {
   return trx.select().from(musicFolders);
@@ -94,12 +95,17 @@ const createOrUpdateFolderStructure = async (
   const currentFolderData = {
     name: basename(structure.path),
     path: structure.path,
-    lastModifiedAt: structure.stats.lastModifiedDate,
-    lastChangedAt: structure.stats.lastChangedDate,
-    folderCreatedAt: structure.stats.fileCreatedDate,
-    lastParsedAt: structure.stats.lastParsedDate,
-    parentId
+    lastModifiedAt: new Date(structure.stats.lastModifiedDate),
+    lastChangedAt: new Date(structure.stats.lastChangedDate),
+    folderCreatedAt: new Date(structure.stats.fileCreatedDate),
+    lastParsedAt: new Date(structure.stats.lastParsedDate),
+    parentId: parentId ?? null
   };
+
+  logger.debug(`createOrUpdateFolderStructure: looking up folder`, {
+    path: structure.path,
+    parentId: parentId ?? null
+  });
 
   const folder = await trx
     .select()
@@ -107,15 +113,20 @@ const createOrUpdateFolderStructure = async (
     .where(
       and(
         eq(musicFolders.path, structure.path),
-        parentId === null
+        // Use == null to catch both null and undefined
+        parentId == null
           ? isNull(musicFolders.parentId)
-          : eq(musicFolders.parentId, parentId as number)
+          : eq(musicFolders.parentId, parentId)
       )
     )
     .limit(1);
   const selectedFolder = folder.at(0);
 
   if (selectedFolder) {
+    logger.debug(`createOrUpdateFolderStructure: updating existing folder`, {
+      id: selectedFolder.id,
+      path: structure.path
+    });
     const data = await trx
       .update(musicFolders)
       .set(currentFolderData)
@@ -124,14 +135,27 @@ const createOrUpdateFolderStructure = async (
 
     updatedFolders.push(data[0]);
   } else {
-    const addedFolder = await trx.insert(musicFolders).values(currentFolderData).returning();
-
-    addedFolders.push(addedFolder[0]);
+    logger.debug(`createOrUpdateFolderStructure: inserting new folder`, {
+      path: structure.path,
+      parentId: parentId ?? null
+    });
+    try {
+      const addedFolder = await trx.insert(musicFolders).values(currentFolderData).returning();
+      addedFolders.push(addedFolder[0]);
+    } catch (error) {
+      logger.error(`createOrUpdateFolderStructure: INSERT failed for folder`, {
+        error,
+        path: structure.path,
+        parentId: parentId ?? null
+      });
+      throw error;
+    }
   }
 
   if (structure.subFolders.length > 0) {
+    const currentFolderId = selectedFolder?.id ?? addedFolders.at(-1)?.id;
     for (const subFolder of structure.subFolders) {
-      const res = await createOrUpdateFolderStructure(subFolder, trx, folder[0]?.id);
+      const res = await createOrUpdateFolderStructure(subFolder, trx, currentFolderId);
 
       addedFolders.push(...res.addedFolders);
       updatedFolders.push(...res.updatedFolders);
