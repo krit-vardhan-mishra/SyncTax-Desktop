@@ -1,13 +1,41 @@
-name: Build/release
+name: Build & Release
 
 on:
-  # push:
-  #   branches: ['master']
+  # Automatically trigger on version tags (e.g., v4.0.0-alpha.4)
+  push:
+    tags:
+      - 'v*'
 
-  # pull_request:
-  #   branches: ['master']
-
+  # Allow manual trigger from the Actions tab
   workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Release tag (e.g., v4.0.0-alpha.5). Leave empty to use the current commit SHA.'
+        required: false
+        type: string
+      release_title:
+        description: 'Release title (e.g., SyncTax Desktop v4.0.0-alpha.5 — What Changed!)'
+        required: false
+        type: string
+      release_body:
+        description: 'Release notes body (Markdown supported). Leave empty for auto-generated notes.'
+        required: false
+        type: string
+      prerelease:
+        description: 'Mark as pre-release?'
+        required: false
+        default: true
+        type: boolean
+      draft:
+        description: 'Mark as draft?'
+        required: false
+        default: true
+        type: boolean
+
+# Ensure only one release workflow runs at a time
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   MAIN_VITE_LAST_FM_API_KEY: ${{ secrets.LAST_FM_API_KEY }}
@@ -17,62 +45,239 @@ env:
   MAIN_VITE_DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
 
 jobs:
-  release:
+  # ─────────────────────────────────────────────────────────
+  # Job 1: Build on each platform and upload artifacts
+  # ─────────────────────────────────────────────────────────
+  build:
+    name: Build (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          # ── Windows ──
+          - os: windows-latest
+            platform: win
+            build_script: build:win
+          # ── Linux ──
+          - os: ubuntu-latest
+            platform: linux
+            build_script: build:linux
+          # ── macOS ──
+          - os: macos-latest
+            platform: mac
+            build_script: build:mac
 
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v5
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v6
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
-          check-latest: true
-          package-manager-cache: false
+          cache: 'npm'
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: |
           npm ci --no-fund --no-audit --include=optional
           npm rebuild rollup
 
-      # - name: Install correct Sharp Dependencies
-      #   run: |
-      #     npm remove sharp
-      #     npm install --cpu=wasm32 sharp --no-fund --no-audit --include=optional
+      # Linux needs additional packages for electron-builder
+      - name: Install Linux build dependencies
+        if: matrix.platform == 'linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y rpm snapcraft
 
-      - name: build-linux
-        if: matrix.os == 'ubuntu-latest'
-        run: npm run build:linux
+      - name: Build for ${{ matrix.platform }}
+        run: npm run ${{ matrix.build_script }}
 
-      - name: build-macos
-        if: matrix.os == 'macos-latest'
-        run: npm run build:mac
-
-      - name: build-win
-        if: matrix.os == 'windows-latest'
-        run: npm run build:win
-
-      - name: release
-        uses: softprops/action-gh-release@v2
+      # Upload dist/ as a workflow artifact so the release job can download it
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
         with:
-          draft: true
-          name: SyncTax Desktop Release ${{ github.ref }} ${{ github.sha }}
-          files: |
+          name: build-${{ matrix.platform }}
+          path: |
             dist/*.exe
-            dist/*.zip
-            dist/*.dmg
+            dist/*.blockmap
             dist/*.AppImage
             dist/*.snap
             dist/*.deb
             dist/*.rpm
             dist/*.tar.gz
+            dist/*.dmg
+            dist/*.zip
             dist/*.yml
-            dist/*.blockmap
+            dist/*.yaml
+          if-no-files-found: error
+          retention-days: 3
+
+  # ─────────────────────────────────────────────────────────
+  # Job 2: Create a single GitHub Release and upload all assets
+  # ─────────────────────────────────────────────────────────
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Download all build artifacts from the matrix jobs
+      - name: Download Windows artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-win
+          path: release-assets/
+
+      - name: Download Linux artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-linux
+          path: release-assets/
+
+      - name: Download macOS artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-mac
+          path: release-assets/
+
+      # Debug: list all assets
+      - name: List release assets
+        run: |
+          echo "=== Release Assets ==="
+          find release-assets/ -type f | sort
+          echo "======================"
+
+      # Determine version and tag
+      - name: Determine release tag and version
+        id: version
+        run: |
+          if [[ "${{ github.event_name }}" == "push" && "${{ github.ref_type }}" == "tag" ]]; then
+            TAG="${{ github.ref_name }}"
+          elif [[ -n "${{ inputs.tag_name }}" ]]; then
+            TAG="${{ inputs.tag_name }}"
+          else
+            TAG="v$(node -p "require('./package.json').version")"
+          fi
+          VERSION="${TAG#v}"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Resolved tag: $TAG (version: $VERSION)"
+
+      # Build the release title
+      - name: Determine release title
+        id: title
+        run: |
+          if [[ -n "${{ inputs.release_title }}" ]]; then
+            TITLE="${{ inputs.release_title }}"
+          else
+            TITLE="SyncTax Desktop ${{ steps.version.outputs.tag }}"
+          fi
+          echo "title=$TITLE" >> "$GITHUB_OUTPUT"
+
+      # Build the release body with all details
+      - name: Generate release body
+        id: body
+        run: |
+          if [[ -n "${{ inputs.release_body }}" ]]; then
+            echo "${{ inputs.release_body }}" > release_body.md
+          else
+            cat > release_body.md << 'RELEASE_EOF'
+          ## SyncTax Desktop ${{ steps.version.outputs.tag }}
+
+          An elegant, hybrid music player for the desktop. Built on top of a modernized architecture with Electron + React + TypeScript.
+
+          ---
+
+          ### 📦 Downloads
+
+          #### Windows
+          | File | Architecture | Description |
+          |------|-------------|-------------|
+          | `SyncTax Desktop v${{ steps.version.outputs.version }}-win-x64.exe` | x64 (Intel/AMD) | Windows installer (64-bit) |
+          | `SyncTax Desktop v${{ steps.version.outputs.version }}-win-arm64.exe` | ARM64 | Windows installer (ARM) |
+
+          #### macOS
+          | File | Architecture | Description |
+          |------|-------------|-------------|
+          | `SyncTax Desktop v${{ steps.version.outputs.version }}-mac-x64.dmg` | x64 (Intel) | macOS disk image (Intel Macs) |
+          | `SyncTax Desktop v${{ steps.version.outputs.version }}-mac-arm64.dmg` | ARM64 (Apple Silicon) | macOS disk image (M1/M2/M3+) |
+
+          #### Linux
+          | File | Description |
+          |------|-------------|
+          | `SyncTax Desktop v${{ steps.version.outputs.version }}-linux-x86_64.AppImage` | AppImage (universal, no install needed) |
+          | `SyncTax Desktop v${{ steps.version.outputs.version }}-linux-amd64.deb` | Debian/Ubuntu package |
+          | `SyncTax Desktop v${{ steps.version.outputs.version }}-linux-x86_64.rpm` | Fedora/RHEL package |
+          | `SyncTax Desktop v${{ steps.version.outputs.version }}-linux-amd64.snap` | Snap package |
+
+          ---
+
+          ### 🚀 Installation
+
+          **Windows:**
+          1. Download the `.exe` installer for your architecture (x64 or arm64).
+          2. Run the installer and follow the setup wizard.
+          3. Launch SyncTax Desktop and select your music directory!
+
+          **macOS:**
+          1. Download the `.dmg` file for your Mac (Intel x64 or Apple Silicon arm64).
+          2. Open the `.dmg` and drag **SyncTax Desktop** into your Applications folder.
+          3. On first launch, right-click → Open to bypass Gatekeeper (unsigned app).
+
+          **Linux (AppImage):**
+          1. Download the `.AppImage` file.
+          2. Make it executable: `chmod +x SyncTax*.AppImage`
+          3. Run it: `./SyncTax*.AppImage`
+
+          **Linux (Debian/Ubuntu):**
+          ```bash
+          sudo dpkg -i SyncTax*.deb
+          ```
+
+          **Linux (Fedora/RHEL):**
+          ```bash
+          sudo rpm -i SyncTax*.rpm
+          ```
+
+          ---
+
+          ### 🛠️ Tech Stack
+          - Built with **Electron** + **React** + **TypeScript**
+          - Maintained by [Krit Vardhan Mishra](https://github.com/krit-vardhan-mishra)
+          RELEASE_EOF
+          fi
+          echo "Generated release body."
+
+      # Create the GitHub Release and upload all assets
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: ${{ steps.title.outputs.title }}
+          body_path: release_body.md
+          draft: ${{ inputs.draft || true }}
+          prerelease: ${{ inputs.prerelease || true }}
+          files: |
+            release-assets/*.exe
+            release-assets/*.blockmap
+            release-assets/*.dmg
+            release-assets/*.zip
+            release-assets/*.AppImage
+            release-assets/*.snap
+            release-assets/*.deb
+            release-assets/*.rpm
+            release-assets/*.tar.gz
+            release-assets/*.yml
+            release-assets/*.yaml
+          fail_on_unmatched_files: false
+          generate_release_notes: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
