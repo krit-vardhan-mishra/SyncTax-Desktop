@@ -1,0 +1,91 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+
+# ─────────────────────────────────────────────────────────
+# CodeRabbit Configuration for SyncTax Desktop
+# https://docs.coderabbit.ai/guides/configure-coderabbit
+# ─────────────────────────────────────────────────────────
+
+language: "en-US"
+
+# ── Early Access Features ──
+early_access: false
+
+# ── Tone & Persona ──
+tone_instructions: >
+  You are reviewing an Electron + React + TypeScript desktop music player
+  called SyncTax Desktop. Focus on bugs, security vulnerabilities, performance
+  issues, memory leaks, and architectural concerns. Be constructive and concise.
+  Skip minor style nitpicks — the project uses Oxfmt for formatting and Oxlint
+  for linting. Pay special attention to IPC communication patterns, database
+  queries (PGlite/Drizzle), and audio playback logic.
+
+# ── Review Settings ──
+reviews:
+  # Automatically review PRs when they are opened or updated
+  auto_review:
+    enabled: true
+    # Don't review draft PRs (they're work-in-progress)
+    drafts: false
+    # Only review PRs targeting these branches
+    base_branches:
+      - master
+      - main
+
+  # Request changes for critical/major issues
+  request_changes_workflow: true
+
+  # Generate a high-level summary at the top of the review
+  high_level_summary: true
+  high_level_summary_placeholder: "@coderabbitai summary"
+
+  # Generate a walkthrough of the changes
+  walkthrough: true
+  # Keep the walkthrough collapsed to reduce noise
+  collapse_walkthrough: false
+
+  # Sequence diagrams for complex changes
+  sequence_diagrams: true
+
+  # No poems (keep it professional)
+  poem: false
+
+  # Show review status
+  review_status: true
+
+  # ── Files to Skip ──
+  # These files generate noise and don't benefit from AI review
+  path_filters:
+    # Lock files and generated files
+    - "!**/package-lock.json"
+    - "!**/pnpm-lock.yaml"
+    - "!**/yarn.lock"
+    # Build output
+    - "!**/dist/**"
+    - "!**/out/**"
+    - "!**/build/**"
+    # Assets that can't be meaningfully reviewed
+    - "!**/*.bmp"
+    - "!**/*.ico"
+    - "!**/*.icns"
+    - "!**/*.png"
+    - "!**/*.webp"
+    - "!**/*.svg"
+    - "!**/*.woff"
+    - "!**/*.woff2"
+    # Database migrations (auto-generated)
+    - "!**/drizzle/**"
+    # Test snapshots
+    - "!**/__snapshots__/**"
+    # i18n translation files (large JSON)
+    - "!**/locales/**/*.json"
+
+  # ── Knowledge Base ──
+  # Let CodeRabbit learn from your codebase patterns
+  knowledge_base:
+    opt_out: false
+    learnings:
+      scope: auto
+
+# ── Chat Settings ──
+chat:
+  auto_reply: true

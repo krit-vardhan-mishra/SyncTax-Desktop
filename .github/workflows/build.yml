@@ -89,7 +89,8 @@ jobs:
         if: matrix.platform == 'linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y rpm snapcraft
+          sudo apt-get install -y rpm
+          sudo snap install snapcraft --classic
 
       - name: Build for ${{ matrix.platform }}
         run: npm run ${{ matrix.build_script }}
