@@ -82,6 +82,34 @@ jobs:
           node-version: 'lts/*'
           cache: 'npm'
 
+      - name: Update package.json version from tag/input
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          REF_TYPE: ${{ github.ref_type }}
+          REF_NAME: ${{ github.ref_name }}
+          INPUT_TAG_NAME: ${{ inputs.tag_name }}
+        run: |
+          if [[ "$EVENT_NAME" == "push" && "$REF_TYPE" == "tag" ]]; then
+            TAG="$REF_NAME"
+          elif [[ -n "$INPUT_TAG_NAME" ]]; then
+            TAG="$INPUT_TAG_NAME"
+          else
+            TAG=""
+          fi
+          if [[ -n "$TAG" ]]; then
+            VERSION="${TAG#v}"
+            echo "Updating package.json version to $VERSION"
+            node -e "
+              const fs = require('fs');
+              const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+              pkg.version = '$VERSION';
+              fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n', 'utf8');
+            "
+          else
+            echo "No tag or input tag name provided, keeping version in package.json"
+          fi
+
       - name: Install dependencies
         run: |
           npm ci --no-fund --no-audit --include=optional
@@ -161,21 +189,50 @@ jobs:
           find release-assets/ -type f | sort
           echo "======================"
 
-      # Determine version and tag
+      # Determine version, tag, draft, and prerelease options
       - name: Determine release tag and version
         id: version
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          REF_TYPE: ${{ github.ref_type }}
+          REF_NAME: ${{ github.ref_name }}
+          INPUT_TAG_NAME: ${{ inputs.tag_name }}
+          INPUT_DRAFT: ${{ inputs.draft }}
+          INPUT_PRERELEASE: ${{ inputs.prerelease }}
         run: |
-          if [[ "${{ github.event_name }}" == "push" && "${{ github.ref_type }}" == "tag" ]]; then
-            TAG="${{ github.ref_name }}"
-          elif [[ -n "${{ inputs.tag_name }}" ]]; then
-            TAG="${{ inputs.tag_name }}"
+          if [[ "$EVENT_NAME" == "push" && "$REF_TYPE" == "tag" ]]; then
+            TAG="$REF_NAME"
+          elif [[ -n "$INPUT_TAG_NAME" ]]; then
+            TAG="$INPUT_TAG_NAME"
           else
             TAG="v$(node -p "require('./package.json').version")"
           fi
           VERSION="${TAG#v}"
+          
+          # Determine draft status
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            DRAFT="$INPUT_DRAFT"
+          else
+            DRAFT="false"
+          fi
+          
+          # Determine prerelease status
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            PRERELEASE="$INPUT_PRERELEASE"
+          else
+            # On tag pushes, automatically mark as pre-release if tag contains a hyphen
+            if [[ "$TAG" == *-* ]]; then
+              PRERELEASE="true"
+            else
+              PRERELEASE="false"
+            fi
+          fi
+          
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "Resolved tag: $TAG (version: $VERSION)"
+          echo "draft=$DRAFT" >> "$GITHUB_OUTPUT"
+          echo "prerelease=$PRERELEASE" >> "$GITHUB_OUTPUT"
+          echo "Resolved tag: $TAG (version: $VERSION, draft: $DRAFT, prerelease: $PRERELEASE)"
 
       # Build the release title
       - name: Determine release title
@@ -207,22 +264,22 @@ jobs:
           #### Windows
           | File | Architecture | Description |
           |------|-------------|-------------|
-          | `SyncTax Desktop v${{ steps.version.outputs.version }}-win-x64.exe` | x64 (Intel/AMD) | Windows installer (64-bit) |
-          | `SyncTax Desktop v${{ steps.version.outputs.version }}-win-arm64.exe` | ARM64 | Windows installer (ARM) |
+          | `SyncTax.Desktop.v${{ steps.version.outputs.version }}-win-x64.exe` | x64 (Intel/AMD) | Windows installer (64-bit) |
+          | `SyncTax.Desktop.v${{ steps.version.outputs.version }}-win-arm64.exe` | ARM64 | Windows installer (ARM) |
 
           #### macOS
           | File | Architecture | Description |
           |------|-------------|-------------|
-          | `SyncTax Desktop v${{ steps.version.outputs.version }}-mac-x64.dmg` | x64 (Intel) | macOS disk image (Intel Macs) |
-          | `SyncTax Desktop v${{ steps.version.outputs.version }}-mac-arm64.dmg` | ARM64 (Apple Silicon) | macOS disk image (M1/M2/M3+) |
+          | `SyncTax.Desktop.v${{ steps.version.outputs.version }}-mac-x64.dmg` | x64 (Intel) | macOS disk image (Intel Macs) |
+          | `SyncTax.Desktop.v${{ steps.version.outputs.version }}-mac-arm64.dmg` | ARM64 (Apple Silicon) | macOS disk image (M1/M2/M3+) |
 
           #### Linux
           | File | Description |
           |------|-------------|
-          | `SyncTax Desktop v${{ steps.version.outputs.version }}-linux-x86_64.AppImage` | AppImage (universal, no install needed) |
-          | `SyncTax Desktop v${{ steps.version.outputs.version }}-linux-amd64.deb` | Debian/Ubuntu package |
-          | `SyncTax Desktop v${{ steps.version.outputs.version }}-linux-x86_64.rpm` | Fedora/RHEL package |
-          | `SyncTax Desktop v${{ steps.version.outputs.version }}-linux-amd64.snap` | Snap package |
+          | `SyncTax.Desktop.v${{ steps.version.outputs.version }}-linux-x86_64.AppImage` | AppImage (universal, no install needed) |
+          | `SyncTax.Desktop.v${{ steps.version.outputs.version }}-linux-amd64.deb` | Debian/Ubuntu package |
+          | `SyncTax.Desktop.v${{ steps.version.outputs.version }}-linux-x86_64.rpm` | Fedora/RHEL package |
+          | `SyncTax.Desktop.v${{ steps.version.outputs.version }}-linux-amd64.snap` | Snap package |
 
           ---
 
@@ -269,8 +326,8 @@ jobs:
           tag_name: ${{ steps.version.outputs.tag }}
           name: ${{ steps.title.outputs.title }}
           body_path: release_body.md
-          draft: ${{ inputs.draft || true }}
-          prerelease: ${{ inputs.prerelease || true }}
+          draft: ${{ steps.version.outputs.draft == 'true' }}
+          prerelease: ${{ steps.version.outputs.prerelease == 'true' }}
           files: |
             release-assets/*.exe
             release-assets/*.blockmap
