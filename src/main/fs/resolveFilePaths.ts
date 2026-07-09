@@ -85,14 +85,20 @@ export const parseSongArtworks = (
   const isArtworkAvailable = artworks.length > 0;
 
   if (isArtworkAvailable) {
-    const highResImage = artworks.find((artwork) => artwork.width >= 500 && artwork.height >= 500);
-    const lowResImage = artworks.find((artwork) => artwork.width < 500 && artwork.height < 500);
+    const highResImage = artworks.find((artwork) => artwork.width >= 500 && artwork.height >= 500) || artworks[0];
+    const lowResImage = artworks.find((artwork) => artwork.width < 500 && artwork.height < 500) || artworks[0];
 
     if (highResImage && lowResImage) {
+      const getPath = (p: string) => {
+        if (p.startsWith('http://') || p.startsWith('https://')) {
+          return p;
+        }
+        return joinPath(FILE_URL, p) + timestampStr;
+      };
       return {
         isDefaultArtwork: !isArtworkAvailable,
-        artworkPath: joinPath(FILE_URL, highResImage.path) + timestampStr,
-        optimizedArtworkPath: joinPath(FILE_URL, lowResImage.path) + timestampStr
+        artworkPath: getPath(highResImage.path),
+        optimizedArtworkPath: getPath(lowResImage.path)
       };
     }
   }

@@ -45,6 +45,10 @@ const NewPlaylistPrompt = lazy(
   () => import('@renderer/components/PlaylistsPage/NewPlaylistPrompt')
 );
 
+const ImportOnlinePlaylistPrompt = lazy(
+  () => import('@renderer/components/PlaylistsPage/ImportOnlinePlaylistPrompt')
+);
+
 const MIN_ITEM_WIDTH = 175;
 const MIN_ITEM_HEIGHT = 220;
 
@@ -68,23 +72,6 @@ function PlaylistsPage() {
   const {
     data: { data: playlists }
   } = useSuspenseQuery(playlistQuery.all({ sortType: sortingOrder }));
-
-  // useEffect(() => {
-  //   fetchPlaylistData();
-  //   const managePlaylistDataUpdatesInPlaylistsPage = (e: Event) => {
-  //     if ('detail' in e) {
-  //       const dataEvents = (e as DetailAvailableEvent<DataUpdateEvent[]>).detail;
-  //       for (let i = 0; i < dataEvents.length; i += 1) {
-  //         const event = dataEvents[i];
-  //         if (event.dataType === 'playlists') fetchPlaylistData();
-  //       }
-  //     }
-  //   };
-  //   document.addEventListener('app/dataUpdates', managePlaylistDataUpdatesInPlaylistsPage);
-  //   return () => {
-  //     document.removeEventListener('app/dataUpdates', managePlaylistDataUpdatesInPlaylistsPage);
-  //   };
-  // }, [fetchPlaylistData]);
 
   useEffect(() => {
     storage.sortingStates.setSortingStates('playlistsPage', sortingOrder);
@@ -112,6 +99,25 @@ function PlaylistsPage() {
     [changePromptMenuData, playlists, sortingOrder]
   );
 
+  const importOnlinePlaylist = useCallback(
+    () =>
+      changePromptMenuData(
+        true,
+        <ImportOnlinePlaylistPrompt
+          updatePlaylists={() =>
+            queryClient.invalidateQueries(
+              playlistQuery.all({
+                sortType: sortingOrder,
+                start: 0,
+                end: 0
+              })
+            )
+          }
+        />
+      ),
+    [changePromptMenuData, sortingOrder]
+  );
+
   return (
     <MainContainer
       className="main-container appear-from-bottom playlists-list-container mb-0 h-full! pb-0!"
@@ -129,6 +135,11 @@ function PlaylistsPage() {
               iconName: 'publish',
               handlerFunction: () =>
                 window.api.playlistsData.importPlaylist().catch((err) => console.error(err))
+            },
+            {
+              label: 'Import Online Playlist',
+              iconName: 'cloud_download',
+              handlerFunction: importOnlinePlaylist
             }
           ],
           e.pageX,
@@ -185,6 +196,12 @@ function PlaylistsPage() {
                   })
                   .catch((err) => console.error(err));
               }}
+            />
+            <Button
+              label="Import Online"
+              className="import-online-playlist-btn text-sm md:text-lg md:[&>.button-label-text]:hidden md:[&>.icon]:mr-0"
+              iconName="cloud_download"
+              clickHandler={importOnlinePlaylist}
             />
             <Button
               label={t(`playlistsPage.addPlaylist`)}

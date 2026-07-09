@@ -33,6 +33,7 @@ import getSongLyrics from './core/getSongLyrics';
 import getStorageUsage from './core/getStorageUsage';
 import importAppData from './core/importAppData';
 import importPlaylist from './core/importPlaylist';
+import { importOnlinePlaylist } from './core/importOnlinePlaylist';
 import removeMusicFolder from './core/removeMusicFolder';
 import removePlaylists from './core/removePlaylists';
 import removeSongFromPlaylist from './core/removeSongFromPlaylist';
@@ -121,6 +122,8 @@ export function initializeIPC(mainWindow: BrowserWindow, abortSignal: AbortSigna
     ipcMain.on('app/toggleMaximize', () =>
       mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize()
     );
+
+    ipcMain.handle('app/isMaximized', () => mainWindow.isMaximized());
 
     ipcMain.on('app/hide', () => mainWindow.hide());
 
@@ -449,6 +452,12 @@ export function initializeIPC(mainWindow: BrowserWindow, abortSignal: AbortSigna
 
     ipcMain.handle('app/renameAPlaylist', (_, playlistId: number, newName: string) =>
       renameAPlaylist(playlistId, newName)
+    );
+
+    ipcMain.handle(
+      'app/importOnlinePlaylist',
+      (_, url: string, type: 'youtube' | 'spotify', customName?: string) =>
+        importOnlinePlaylist(url, type, customName)
     );
 
     ipcMain.handle('app/clearSongHistory', () => clearSongHistory());

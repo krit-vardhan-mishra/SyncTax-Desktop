@@ -119,6 +119,10 @@ export function useAppLifecycle(dependencies: AppLifecycleDependencies): void {
       ? playerInstance
       : (playerInstance as AudioPlayer).audio;
 
+  // Extract AudioPlayer instance (null if using raw HTMLAudioElement)
+  const audioPlayer =
+    playerInstance instanceof HTMLAudioElement ? null : (playerInstance as AudioPlayer);
+
   useEffect(() => {
     // LOCAL STORAGE
     const { playback, preferences, queue } = storage.getAllItems();
@@ -254,20 +258,35 @@ export function useAppLifecycle(dependencies: AppLifecycleDependencies): void {
       window.api.playerControls.songPlaybackStateChange(false);
     };
     const handleBeforeQuitEvent = async () => {
-      storage.playback.setCurrentSongOptions('stoppedPosition', player.currentTime);
+      // Use audioPlayer.audio to always get the CURRENT audio element (not a stale ref)
+      const currentAudio = audioPlayer ? audioPlayer.audio : player;
+      storage.playback.setCurrentSongOptions('stoppedPosition', currentAudio.currentTime);
       storage.playback.setPlaybackOptions('isRepeating', store.state.player.isRepeating);
       storage.playback.setPlaybackOptions('isShuffling', store.state.player.isShuffling);
     };
 
-    player.addEventListener('error', handlePlayerErrorEvent);
-    player.addEventListener('play', handlePlayerPlayEvent);
-    player.addEventListener('pause', handlePlayerPauseEvent);
+    // Use AudioPlayer event emitter if available (survives audio element swaps)
+    if (audioPlayer) {
+      audioPlayer.on('error', handlePlayerErrorEvent);
+      audioPlayer.on('play', handlePlayerPlayEvent);
+      audioPlayer.on('pause', handlePlayerPauseEvent);
+    } else {
+      player.addEventListener('error', handlePlayerErrorEvent);
+      player.addEventListener('play', handlePlayerPlayEvent);
+      player.addEventListener('pause', handlePlayerPauseEvent);
+    }
     window.api.quitEvent.beforeQuitEvent(handleBeforeQuitEvent);
 
     return () => {
-      player.removeEventListener('error', handlePlayerErrorEvent);
-      player.removeEventListener('play', handlePlayerPlayEvent);
-      player.removeEventListener('pause', handlePlayerPauseEvent);
+      if (audioPlayer) {
+        audioPlayer.off('error', handlePlayerErrorEvent);
+        audioPlayer.off('play', handlePlayerPlayEvent);
+        audioPlayer.off('pause', handlePlayerPauseEvent);
+      } else {
+        player.removeEventListener('error', handlePlayerErrorEvent);
+        player.removeEventListener('play', handlePlayerPlayEvent);
+        player.removeEventListener('pause', handlePlayerPauseEvent);
+      }
       window.api.quitEvent.removeBeforeQuitEventListener(handleBeforeQuitEvent);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -277,7 +296,8 @@ export function useAppLifecycle(dependencies: AppLifecycleDependencies): void {
   useEffect(() => {
     const displayDefaultTitleBar = () => {
       windowManagement.resetTitleBarInfo();
-      storage.playback.setCurrentSongOptions('stoppedPosition', player.currentTime);
+      const currentAudio = audioPlayer ? audioPlayer.audio : player;
+      storage.playback.setCurrentSongOptions('stoppedPosition', currentAudio.currentTime);
     };
     const playSongIfPlayable = () => {
       if (refStartPlay.current) toggleSongPlayback(true);
@@ -285,15 +305,38 @@ export function useAppLifecycle(dependencies: AppLifecycleDependencies): void {
     // Note: 'ended' event is now handled entirely by AudioPlayer.handleSongEnd()
     // which automatically moves to the next song and resumes playback
 
-    player.addEventListener('canplay', playSongIfPlayable);
-    player.addEventListener('play', windowManagement.addSongTitleToTitleBar);
-    player.addEventListener('pause', displayDefaultTitleBar);
+    // Use AudioPlayer event emitter if available (survives audio element swaps)
+    if (audioPlayer) {
+      // Note: canplay doesn't exist as an AudioPlayer event, keep on DOM element
+      // but wrap to always get the current element
+      audioPlayer.on('play', windowManagement.addSongTitleToTitleBar);
+      audioPlayer.on('pause', displayDefaultTitleBar);
+    } else {
+      player.addEventListener('play', windowManagement.addSongTitleToTitleBar);
+      player.addEventListener('pause', displayDefaultTitleBar);
+    }
+
+    // canplay still needs the DOM element — but it only fires during loadSong which
+    // always uses the CURRENT this.audio element, so the event does fire on the new element.
+    // We listen via a delegate that reads audioPlayer.audio each time.
+    const canplayHandler = () => playSongIfPlayable();
+    if (audioPlayer) {
+      // We can't use the emitter for canplay (not emitted). Instead, we rely on the
+      // autoPlay logic inside AudioPlayer.loadSong which handles canplay internally.
+    } else {
+      player.addEventListener('canplay', canplayHandler);
+    }
 
     return () => {
       toggleSongPlayback(false);
-      player.removeEventListener('canplay', playSongIfPlayable);
-      player.removeEventListener('play', windowManagement.addSongTitleToTitleBar);
-      player.removeEventListener('pause', displayDefaultTitleBar);
+      if (audioPlayer) {
+        audioPlayer.off('play', windowManagement.addSongTitleToTitleBar);
+        audioPlayer.off('pause', displayDefaultTitleBar);
+      } else {
+        player.removeEventListener('canplay', canplayHandler);
+        player.removeEventListener('play', windowManagement.addSongTitleToTitleBar);
+        player.removeEventListener('pause', displayDefaultTitleBar);
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

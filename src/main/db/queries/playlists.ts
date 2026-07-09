@@ -34,7 +34,7 @@ export const getAllPlaylists = async (
       return and(...filters);
     },
     with: {
-      songs: { with: { song: { columns: { id: true } } } },
+      songs: { with: { song: { columns: { id: true, path: true } } } },
       artworks: {
         with: {
           artwork: {
@@ -72,7 +72,7 @@ export const getPlaylistById = async (id: number, trx: DB | DBTransaction = db) 
   const data = await trx.query.playlists.findFirst({
     where: eq(playlists.id, id),
     with: {
-      songs: { with: { song: { columns: { id: true } } } },
+      songs: { with: { song: { columns: { id: true, path: true } } } },
       artworks: {
         with: {
           artwork: {
@@ -97,7 +97,7 @@ export const getPlaylistByName = async (name: string, trx: DB | DBTransaction = 
   const data = await trx.query.playlists.findFirst({
     where: eq(playlists.name, name),
     with: {
-      songs: { with: { song: { columns: { id: true } } } },
+      songs: { with: { song: { columns: { id: true, path: true } } } },
       artworks: {
         with: {
           artwork: {
@@ -123,7 +123,7 @@ export const getFavoritesPlaylist = async (trx: DB | DBTransaction = db) => {
   const data = await trx.query.playlists.findFirst({
     where: (s) => eq(s.name, 'Favorites'),
     with: {
-      songs: { with: { song: { columns: { id: true } } } },
+      songs: { with: { song: { columns: { id: true, path: true } } } },
       artworks: {
         with: {
           artwork: {
@@ -150,7 +150,7 @@ export const getHistoryPlaylist = async (trx: DB | DBTransaction = db) => {
   const data = await trx.query.playlists.findFirst({
     where: (s) => eq(s.name, 'History'),
     with: {
-      songs: { with: { song: { columns: { id: true } } } },
+      songs: { with: { song: { columns: { id: true, path: true } } } },
       artworks: {
         with: {
           artwork: {

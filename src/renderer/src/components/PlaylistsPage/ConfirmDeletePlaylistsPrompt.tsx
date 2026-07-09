@@ -8,13 +8,14 @@ import Button from '../Button';
 interface ConfirmDeletePlaylistProp {
   playlistIds: number[];
   playlistName?: string;
+  onSuccess?: () => void;
 }
 
 const ConfirmDeletePlaylistsPrompt = (props: ConfirmDeletePlaylistProp) => {
   const { addNewNotifications, changePromptMenuData } = useContext(AppUpdateContext);
   const { t } = useTranslation();
 
-  const { playlistIds, playlistName } = props;
+  const { playlistIds, playlistName, onSuccess } = props;
 
   const [playlistsData, setPlaylistsData] = useState<Playlist[]>([]);
 
@@ -41,6 +42,7 @@ const ConfirmDeletePlaylistsPrompt = (props: ConfirmDeletePlaylistProp) => {
       .removePlaylists(playlistIds)
       .then(() => {
         changePromptMenuData(false);
+        if (onSuccess) onSuccess();
         return addNewNotifications([
           {
             id: `playlistsDeleted`,

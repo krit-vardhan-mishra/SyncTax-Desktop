@@ -28,8 +28,11 @@ export const getAllSongsInHistory = async (
   const limit = end - start === 0 ? undefined : end - start;
 
   const data = await trx.query.songs.findMany({
-    where: (songs, { exists }) =>
-      exists(trx.select().from(playHistory).where(eq(playHistory.songId, songs.id))),
+    where: (songs, { exists, and, not, ilike }) =>
+      and(
+        exists(trx.select().from(playHistory).where(eq(playHistory.songId, songs.id))),
+        not(ilike(songs.path, 'online://%'))
+      ),
     with: {
       artists: {
         with: {

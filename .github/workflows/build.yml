@@ -1,8 +1,11 @@
 name: Build & Release
 
 on:
-  # Automatically trigger on version tags (e.g., v4.0.0-alpha.4)
+  # Automatically trigger on version tags (e.g., v4.0.0-alpha.4) and master/main pushes
   push:
+    branches:
+      - 'master'
+      - 'main'
     tags:
       - 'v*'
 
@@ -121,6 +124,8 @@ jobs:
   release:
     name: Create Release
     needs: build
+    # Only run the release job if triggered by a tag or manual dispatch
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
 
     permissions:

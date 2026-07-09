@@ -22,6 +22,10 @@ const SensitiveActionConfirmPrompt = lazy(
   () => import('@renderer/components/SensitiveActionConfirmPrompt')
 );
 
+const ConfirmDeletePlaylistsPrompt = lazy(
+  () => import('@renderer/components/PlaylistsPage/ConfirmDeletePlaylistsPrompt')
+);
+
 export const Route = createFileRoute('/main-player/playlists/$playlistId')({
   validateSearch: songSearchSchema,
   component: PlaylistInfoPage,
@@ -104,6 +108,19 @@ function PlaylistInfoPage() {
     );
   }, [addNewNotifications, changePromptMenuData, t]);
 
+  const deletePlaylist = useCallback(() => {
+    changePromptMenuData(
+      true,
+      <ConfirmDeletePlaylistsPrompt
+        playlistIds={[playlistId]}
+        playlistName={playlistData.name}
+        onSuccess={() => {
+          navigate({ to: '/main-player/playlists', replace: true });
+        }}
+      />
+    );
+  }, [changePromptMenuData, playlistId, playlistData.name, navigate]);
+
   const addSongsToQueue = useCallback(() => {
     const validSongIds = playlistSongs
       .filter((song) => !song.isBlacklisted)
@@ -159,6 +176,14 @@ function PlaylistInfoPage() {
         title={playlistData.name}
         className="pr-4"
         buttons={[
+          {
+            label: t('playlist.deletePlaylist_one'),
+            iconName: 'delete',
+            clickHandler: deletePlaylist,
+            isVisible:
+              playlistData.playlistId !== SpecialPlaylists.History &&
+              playlistData.playlistId !== SpecialPlaylists.Favorites
+          },
           {
             label: t('settingsPage.clearHistory'),
             iconName: 'clear',

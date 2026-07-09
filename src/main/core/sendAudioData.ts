@@ -1,6 +1,6 @@
 import { addSongToPlayHistory } from '@main/db/queries/history';
 import { getPlayableSongById } from '@main/db/queries/songs';
-import { getOnlineSongFromCache, getOnlineStreamUrl, addToOnlineListenedSongs } from './onlineMusic';
+import { getOnlineSongFromCache, getOnlineStreamUrl, addToOnlineListenedSongs, searchOnline } from './onlineMusic';
 import { setDiscordRpcActivity } from '@main/other/discordRPC';
 import sharp from 'sharp';
 
@@ -149,19 +149,49 @@ const sendAudioData = async (songId: number): Promise<AudioPlayerData> => {
       const isBlacklisted = song.isBlacklisted;
       const isAFavorite = song.isFavorite;
 
+      let resolvedPath = song.path;
+      if (song.path.startsWith('online://')) {
+        try {
+          if (song.path.startsWith('online://youtube/')) {
+            const videoId = song.path.replace('online://youtube/', '');
+            resolvedPath = await getOnlineStreamUrl(videoId);
+          } else if (song.path.startsWith('online://spotify/')) {
+            const encodedQuery = song.path.replace('online://spotify/', '');
+            const query = decodeURIComponent(encodedQuery);
+            logger.info(`[sendAudioData] Resolving Spotify song via YouTube Music search: "${query}"`);
+            const searchResults = await searchOnline(query);
+            if (searchResults.length === 0 || !searchResults[0].videoId) {
+              throw new Error(`No YouTube match found for Spotify track: "${query}"`);
+            }
+            const videoId = searchResults[0].videoId;
+            resolvedPath = await getOnlineStreamUrl(videoId);
+          }
+        } catch (err) {
+          logger.error(`[sendAudioData] Failed to resolve online song path: ${song.path}`, { err });
+          throw new Error('SONG_DATA_SEND_FAILED' as ErrorCodes);
+        }
+      } else {
+        resolvedPath = resolveSongFilePath(song.path);
+      }
+
+      const isOnline = song.path.startsWith('online://');
       const data: AudioPlayerData = {
         title: song.title,
         artists,
         duration: Number(song.duration),
         artwork: parseArtworkDataForAudioPlayerData(artworkData),
         artworkPath: songArtwork,
-        path: resolveSongFilePath(song.path),
+        path: resolvedPath,
         songId: song.id,
         isAFavorite,
         album,
         paletteData: parsePaletteFromArtworks(artworks),
         isKnownSource: true, // this is always true here because the song is from the library
-        isBlacklisted
+        isBlacklisted,
+        isOnlineStream: isOnline,
+        onlineVideoId: isOnline && song.path.startsWith('online://youtube/')
+          ? song.path.replace('online://youtube/', '')
+          : undefined
       };
 
       addSongToPlayHistory(songId);

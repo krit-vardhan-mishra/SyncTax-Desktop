@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 
 import toggleSongIsFavorite from '../other/toggleSongIsFavorite';
+import type AudioPlayer from '../other/player';
 import { dispatch, store } from '../store/store';
 import storage from '../utils/localStorage';
 import { useUserPreferences } from './useUserPreferences';
@@ -32,8 +33,16 @@ import { useUserPreferences } from './useUserPreferences';
  * @param player - The HTMLAudioElement instance
  * @returns Object containing playback setting functions
  */
-export function usePlaybackSettings(player: HTMLAudioElement) {
+export function usePlaybackSettings(playerOrAudio: AudioPlayer | HTMLAudioElement) {
   const { saveEqualizerPreset } = useUserPreferences();
+
+  // Extract the AudioPlayer instance if available
+  const audioPlayer =
+    playerOrAudio instanceof HTMLAudioElement ? null : (playerOrAudio as AudioPlayer);
+  const player =
+    playerOrAudio instanceof HTMLAudioElement
+      ? playerOrAudio
+      : (playerOrAudio as AudioPlayer).audio;
 
   const toggleRepeat = useCallback((newState?: RepeatTypes) => {
     const repeatState =
@@ -71,9 +80,16 @@ export function usePlaybackSettings(player: HTMLAudioElement) {
 
   const updateSongPosition = useCallback(
     (position: number) => {
-      if (position >= 0 && position <= player.duration) player.currentTime = position;
+      // Use AudioPlayer.seek() to always target the current audio element
+      if (audioPlayer) {
+        if (position >= 0 && position <= audioPlayer.audio.duration) {
+          audioPlayer.seek(position);
+        }
+      } else {
+        if (position >= 0 && position <= player.duration) player.currentTime = position;
+      }
     },
-    [player]
+    [audioPlayer, player]
   );
 
   const toggleIsFavorite = useCallback(

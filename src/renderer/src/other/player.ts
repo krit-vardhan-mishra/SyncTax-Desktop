@@ -62,7 +62,8 @@ class AudioPlayer {
     this.equalizerBands = new Map();
     this.gainNode = this.currentContext.createGain();
 
-    this.currentVolume = this.audio.volume;
+    this.volume = this.audio.volume;
+    this.currentVolume = this.audio.volume * 100;
 
     this.unsubscribeFunc = this.subscribeToStoreEvents();
     this.initializeEqualizer();
@@ -112,58 +113,96 @@ class AudioPlayer {
    * Sets up audio element event listeners. Emits player events for time updates, playback end,
    * errors, etc.
    */
+  private mediaSourceNode: MediaElementAudioSourceNode | null = null;
+
+  private connectAudioToWebAudio() {
+    if (this.mediaSourceNode) {
+      try {
+        this.mediaSourceNode.disconnect();
+      } catch (e) {}
+    }
+    console.log('[AudioPlayer] Connecting HTMLAudioElement to Web Audio API graph.');
+    this.mediaSourceNode = this.currentContext.createMediaElementSource(this.audio);
+    const firstFilterKey = [...this.equalizerBands.keys()][0];
+    const firstFilter = this.equalizerBands.get(firstFilterKey);
+    if (firstFilter) {
+      this.mediaSourceNode.connect(firstFilter);
+    }
+  }
+
+  private handleEnded = () => {
+    console.log('[AudioPlayer.audio] Song playback ended.');
+    this.handleSongEnd();
+  };
+
+  private handleTimeUpdate = () => {
+    this.emit('timeUpdate', this.audio.currentTime);
+  };
+
+  private handleLoadedMetadata = () => {
+    console.log('[AudioPlayer.audio] Metadata loaded:', {
+      duration: this.audio.duration,
+      src: this.audio.src,
+      crossOrigin: this.audio.crossOrigin
+    });
+    this.emit('durationChange', this.audio.duration);
+  };
+
+  private handlePlay = () => {
+    console.log('[AudioPlayer.audio] Play event fired. Audio details:', {
+      src: this.audio.src,
+      crossOrigin: this.audio.crossOrigin,
+      paused: this.audio.paused,
+      currentTime: this.audio.currentTime,
+      networkState: this.audio.networkState,
+      readyState: this.audio.readyState
+    });
+    this.emit('play');
+  };
+
+  private handlePause = () => {
+    console.log('[AudioPlayer.audio] Pause event fired.');
+    this.emit('pause');
+  };
+
+  private handleError = (e: ErrorEvent) => {
+    console.error('[AudioPlayer.audio] Error event fired. Details:', {
+      error: this.audio.error,
+      src: this.audio.src,
+      crossOrigin: this.audio.crossOrigin
+    });
+    this.emit('error', e);
+  };
+
+  private handleSeeking = () => {
+    this.emit('seeking');
+  };
+
+  private handleSeeked = () => {
+    this.emit('seeked', this.audio.currentTime);
+  };
+
   private setupAudioEventListeners() {
-    this.audio.addEventListener('ended', () => {
-      console.log('[AudioPlayer.audio] Song playback ended.');
-      this.handleSongEnd();
-    });
+    this.audio.addEventListener('ended', this.handleEnded);
+    this.audio.addEventListener('timeupdate', this.handleTimeUpdate);
+    this.audio.addEventListener('loadedmetadata', this.handleLoadedMetadata);
+    this.audio.addEventListener('play', this.handlePlay);
+    this.audio.addEventListener('pause', this.handlePause);
+    this.audio.addEventListener('error', this.handleError as any);
+    this.audio.addEventListener('seeking', this.handleSeeking);
+    this.audio.addEventListener('seeked', this.handleSeeked);
+  }
 
-    this.audio.addEventListener('timeupdate', () => {
-      this.emit('timeUpdate', this.audio.currentTime);
-    });
-
-    this.audio.addEventListener('loadedmetadata', () => {
-      console.log('[AudioPlayer.audio] Metadata loaded:', {
-        duration: this.audio.duration,
-        src: this.audio.src,
-        crossOrigin: this.audio.crossOrigin
-      });
-      this.emit('durationChange', this.audio.duration);
-    });
-
-    this.audio.addEventListener('play', () => {
-      console.log('[AudioPlayer.audio] Play event fired. Audio details:', {
-        src: this.audio.src,
-        crossOrigin: this.audio.crossOrigin,
-        paused: this.audio.paused,
-        currentTime: this.audio.currentTime,
-        networkState: this.audio.networkState,
-        readyState: this.audio.readyState
-      });
-      this.emit('play');
-    });
-
-    this.audio.addEventListener('pause', () => {
-      console.log('[AudioPlayer.audio] Pause event fired.');
-      this.emit('pause');
-    });
-
-    this.audio.addEventListener('error', (e) => {
-      console.error('[AudioPlayer.audio] Error event fired. Details:', {
-        error: this.audio.error,
-        src: this.audio.src,
-        crossOrigin: this.audio.crossOrigin
-      });
-      this.emit('error', e);
-    });
-
-    this.audio.addEventListener('seeking', () => {
-      this.emit('seeking');
-    });
-
-    this.audio.addEventListener('seeked', () => {
-      this.emit('seeked', this.audio.currentTime);
-    });
+  private removeAudioEventListeners() {
+    if (!this.audio) return;
+    this.audio.removeEventListener('ended', this.handleEnded);
+    this.audio.removeEventListener('timeupdate', this.handleTimeUpdate);
+    this.audio.removeEventListener('loadedmetadata', this.handleLoadedMetadata);
+    this.audio.removeEventListener('play', this.handlePlay);
+    this.audio.removeEventListener('pause', this.handlePause);
+    this.audio.removeEventListener('error', this.handleError as any);
+    this.audio.removeEventListener('seeking', this.handleSeeking);
+    this.audio.removeEventListener('seeked', this.handleSeeked);
   }
 
   /**
@@ -233,9 +272,44 @@ class AudioPlayer {
         storage.playback.setCurrentSongOptions('songId', songData.songId);
       }
 
+      // Configure active audio element based on online vs local stream
+      const isOnline = !!songData.isOnlineStream;
+      const currentlyConnected = !!this.mediaSourceNode;
+      const needsConnection = !isOnline;
+
+      if (!this.audio || currentlyConnected !== needsConnection) {
+        console.log(`[AudioPlayer.loadSong] Recreating HTMLAudioElement. Needs Web Audio: ${needsConnection}`);
+        
+        if (this.audio) {
+          this.audio.pause();
+          this.audio.src = '';
+          this.audio.load();
+          this.removeAudioEventListeners();
+        }
+
+        this.audio = new Audio();
+        this.audio.preload = 'auto';
+        this.audio.defaultPlaybackRate = 1.0;
+        this.audio.volume = needsConnection ? 1.0 : this.volume;
+        this.audio.muted = store.state.localStorage.preferences?.volume?.isMuted || false;
+
+        if (needsConnection) {
+          this.connectAudioToWebAudio();
+        } else {
+          this.mediaSourceNode = null;
+        }
+
+        this.setupAudioEventListeners();
+      }
+
       // Configure crossOrigin BEFORE setting src to allow Web Audio API/Equalizer access via CORS
-      console.log('[AudioPlayer.loadSong] Setting crossOrigin = "anonymous" for media element.');
-      this.audio.crossOrigin = 'anonymous';
+      if (songData.isOnlineStream) {
+        console.log('[AudioPlayer.loadSong] Online stream detected. Disabling crossOrigin CORS headers to prevent YouTube 403 blocks.');
+        this.audio.removeAttribute('crossOrigin');
+      } else {
+        console.log('[AudioPlayer.loadSong] Setting crossOrigin = "anonymous" for media element.');
+        this.audio.crossOrigin = 'anonymous';
+      }
 
       // Set audio source — online streams already have unique URLs, local files get cache-busting
       if (songData.isOnlineStream) {
@@ -397,7 +471,6 @@ class AudioPlayer {
       this.equalizerBands.set(equalizerFilterName, equalizerBand);
     }
 
-    const source = this.currentContext.createMediaElementSource(this.audio);
     const filterMapKeys = [...this.equalizerBands.keys()];
 
     this.equalizerBands.forEach((filter, key, map) => {
@@ -405,17 +478,20 @@ class AudioPlayer {
       const isTheFirstFilter = currentFilterIndex === 0;
       const isTheLastFilter = currentFilterIndex === filterMapKeys.length - 1;
 
-      if (isTheFirstFilter) source.connect(filter);
-      else {
+      if (!isTheFirstFilter) {
         const prevFilter = map.get(filterMapKeys[currentFilterIndex - 1]);
         if (prevFilter) prevFilter.connect(filter);
-
-        if (isTheLastFilter) filter.connect(this.gainNode);
+      }
+      if (isTheLastFilter) {
+        filter.connect(this.gainNode);
       }
     });
 
     // Connect gain node to destination
     this.gainNode.connect(this.currentContext.destination);
+
+    // Initial connection
+    this.connectAudioToWebAudio();
   }
 
   // ? PLAYER RELATED STORE UPDATES HANDLING
@@ -726,8 +802,14 @@ class AudioPlayer {
   /** Sets the volume (0-1). */
   set volume(volume: number) {
     this.currentVolume = volume * 100;
-    this.audio.volume = volume;
-    this.gainNode.gain.value = volume;
+    // For online streams (no Web Audio connection), use audio.volume directly.
+    // For local songs (Web Audio connected), set audio.volume to 1.0 and use gainNode for volume.
+    if (this.mediaSourceNode) {
+      this.audio.volume = 1.0;
+      this.gainNode.gain.value = volume;
+    } else {
+      this.audio.volume = volume;
+    }
   }
 
   /** Gets the muted state. */
@@ -738,7 +820,9 @@ class AudioPlayer {
   /** Sets the muted state. */
   set muted(value: boolean) {
     this.audio.muted = value;
-    this.gainNode.gain.value = value ? 0 : this.volume;
+    if (this.mediaSourceNode) {
+      this.gainNode.gain.value = value ? 0 : this.volume;
+    }
   }
 
   /** Gets the current playback rate. */

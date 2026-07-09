@@ -92,7 +92,7 @@ const TitleBarContainer = (props: Props) => {
           className="minimize-btn m-0! flex h-full items-center justify-center rounded-none! border-0! bg-[transparent]! px-2! text-center text-xl -outline-offset-2 transition-[background] ease-in-out hover:bg-[hsla(0deg,0%,80%,0.5)]! focus-visible:outline!"
           clickHandler={() => window.api.windowControls.minimizeApp()}
           tooltipLabel={t('titleBar.minimize')}
-          iconName="minimize"
+          iconName="keyboard_arrow_down"
           iconClassName="material-icons-round icon flex h-fit cursor-pointer items-center justify-center text-center text-xl font-light! transition-[background] ease-in-out"
           removeFocusOnClick
         />

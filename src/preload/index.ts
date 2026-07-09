@@ -20,7 +20,12 @@ const windowControls = {
   changePlayerType: (type: PlayerTypes): Promise<void> =>
     ipcRenderer.invoke('app/changePlayerType', type),
   onWindowFocus: (callback: (e: unknown) => void) => ipcRenderer.on('app/focused', callback),
-  onWindowBlur: (callback: (e: unknown) => void) => ipcRenderer.on('app/blurred', callback)
+  onWindowBlur: (callback: (e: unknown) => void) => ipcRenderer.on('app/blurred', callback),
+  onWindowStateChange: (callback: (e: unknown, state: WindowState) => void) =>
+    ipcRenderer.on('app/windowStateChange', callback),
+  removeWindowStateChangeEvent: (callback: (e: unknown, state: WindowState) => void) =>
+    ipcRenderer.removeListener('app/windowStateChange', callback),
+  isMaximized: (): Promise<boolean> => ipcRenderer.invoke('app/isMaximized')
 };
 
 const theme = {
@@ -468,7 +473,13 @@ const playlistsData = {
   exportPlaylist: (playlistId: number): Promise<void> =>
     ipcRenderer.invoke('app/exportPlaylist', playlistId),
   importPlaylist: (targetPlaylistId?: number): Promise<void> =>
-    ipcRenderer.invoke('app/importPlaylist', targetPlaylistId)
+    ipcRenderer.invoke('app/importPlaylist', targetPlaylistId),
+  importOnlinePlaylist: (
+    url: string,
+    type: 'youtube' | 'spotify',
+    customName?: string
+  ): Promise<{ success: boolean; playlistName: string; count: number }> =>
+    ipcRenderer.invoke('app/importOnlinePlaylist', url, type, customName)
 };
 
 const queue = {

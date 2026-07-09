@@ -58,6 +58,7 @@ declare global {
     | 'app/removeAMusicFolder'
     | 'app/sendMessageToRendererEvent'
     | 'app/dataUpdateEvent'
+    | 'app/importOnlinePlaylist'
     | 'app/toggleMiniPlayer'
     | 'app/toggleAutoLaunch'
     | 'app/getFolderData'
@@ -713,6 +714,7 @@ declare global {
     songs: number[];
     createdDate: Date;
     isArtworkAvailable: boolean;
+    isOnline?: boolean;
   }
 
   interface Playlist extends SavablePlaylist {

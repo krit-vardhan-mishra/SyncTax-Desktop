@@ -60,7 +60,7 @@ const FullScreenPlayer = () => {
           fallbackSrc={DefaultSongCover}
           loading="eager"
           alt="Song Cover"
-          className={`h-full w-full object-cover shadow-lg blur-none brightness-[.25]! transition-[filter] delay-100 duration-200 ease-in-out ${isLyricsVisible ? 'blur-[2rem]!' : 'blur-[2rem]!'}`}
+          className={`h-full w-full object-cover shadow-lg blur-none brightness-[.25]! transition-[filter] delay-100 duration-200 ease-in-out ${isLyricsVisible ? 'blur-[1.5rem]!' : 'blur-[0.4rem]!'}`}
         />
         {/* <div className="absolute inset-0 h-full w-full bg-linear-to-r from-black/50 to-black/5"></div> */}
       </div>

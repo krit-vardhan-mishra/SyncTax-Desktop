@@ -48,6 +48,10 @@ import { savePendingSongLyrics } from './saveLyricsToSong';
 import checkForUpdates from './update';
 import { savePendingMetadataUpdates } from './updateSong/updateSongId3Tags';
 
+if (process.platform === 'linux' && os.release().toLowerCase().includes('microsoft')) {
+  app.disableHardwareAcceleration();
+}
+
 // / / / / / / / CONSTANTS / / / / / / / / /
 const DEFAULT_APP_PROTOCOL = 'synctax';
 
@@ -288,6 +292,20 @@ app
     electronSession.defaultSession.webRequest.onBeforeSendHeaders(
       { urls: ['*://*.googlevideo.com/*', '*://*.youtube.com/*'] },
       (details, callback) => {
+        // Strip Electron and App Name from User-Agent to prevent YouTube from blocking the stream
+        const userAgentKey = Object.keys(details.requestHeaders).find(
+          (key) => key.toLowerCase() === 'user-agent'
+        ) || 'User-Agent';
+        let userAgent = details.requestHeaders[userAgentKey];
+        if (userAgent) {
+          userAgent = userAgent
+            .replace(/SyncTax-?Desktop\/\S+/gi, '')
+            .replace(/Electron\/\S+/gi, '')
+            .replace(/\s+/g, ' ')
+            .trim();
+          details.requestHeaders[userAgentKey] = userAgent;
+        }
+
         details.requestHeaders['Origin'] = 'https://www.youtube.com';
         details.requestHeaders['Referer'] = 'https://www.youtube.com/';
         details.requestHeaders['Sec-Fetch-Site'] = 'same-origin';
@@ -823,6 +841,10 @@ export async function getRendererLogs(
 
 function recordWindowState(state: WindowState) {
   logger.debug(`Window state changed`, { state });
+
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send('app/windowStateChange', state);
+  }
 
   saveUserSettings({ windowState: state });
 }

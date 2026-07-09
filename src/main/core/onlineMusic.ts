@@ -161,13 +161,15 @@ function parseDurationText(text: string): number {
 }
 
 export function getYtDlpPath(): string {
-  const userDataPath = path.join(app.getPath('userData'), 'yt-dlp.exe');
+  const isWindows = process.platform === 'win32';
+  const fileName = isWindows ? 'yt-dlp.exe' : 'yt-dlp';
+  const userDataPath = path.join(app.getPath('userData'), fileName);
   if (fs.existsSync(userDataPath)) {
     return userDataPath;
   }
   return app.isPackaged
-    ? path.join(process.resourcesPath, 'yt-dlp.exe')
-    : path.join(path.resolve(process.cwd()), 'yt-dlp.exe');
+    ? path.join(process.resourcesPath, fileName)
+    : path.join(path.resolve(process.cwd()), fileName);
 }
 
 export async function isYtDlpInstalled(): Promise<boolean> {
@@ -179,8 +181,10 @@ export async function isYtDlpInstalled(): Promise<boolean> {
 
 export async function downloadYtDlp(event: Electron.IpcMainInvokeEvent): Promise<void> {
   const destDir = app.getPath('userData');
-  const tempPath = path.join(destDir, 'yt-dlp.exe.temp');
-  const finalPath = path.join(destDir, 'yt-dlp.exe');
+  const isWindows = process.platform === 'win32';
+  const fileName = isWindows ? 'yt-dlp.exe' : 'yt-dlp';
+  const tempPath = path.join(destDir, `${fileName}.temp`);
+  const finalPath = path.join(destDir, fileName);
 
   logger.info(`[OnlineStream] Starting download of yt-dlp to: "${finalPath}"`);
 
@@ -196,7 +200,7 @@ export async function downloadYtDlp(event: Electron.IpcMainInvokeEvent): Promise
     }
   }
 
-  const url = 'https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe';
+  const url = `https://github.com/yt-dlp/yt-dlp/releases/latest/download/${fileName}`;
 
   return new Promise<void>((resolve, reject) => {
     const download = (downloadUrl: string) => {
@@ -248,6 +252,14 @@ export async function downloadYtDlp(event: Electron.IpcMainInvokeEvent): Promise
                 fs.unlinkSync(finalPath);
               }
               fs.renameSync(tempPath, finalPath);
+              if (!isWindows) {
+                try {
+                  fs.chmodSync(finalPath, 0o755); // Make the downloaded binary executable on Linux/macOS
+                  logger.info(`[OnlineStream] Successfully set executable permissions (0755) for "${finalPath}"`);
+                } catch (chmodErr) {
+                  logger.error('[OnlineStream] Failed to set executable permissions (chmod) for yt-dlp', { err: chmodErr });
+                }
+              }
               logger.info(`[OnlineStream] yt-dlp download completed and saved successfully to: "${finalPath}"`);
               resolve();
             } catch (renameError) {

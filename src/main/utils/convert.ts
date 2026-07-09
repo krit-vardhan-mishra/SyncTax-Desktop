@@ -95,13 +95,15 @@ export const convertToAlbum = (album: GetAllAlbumsReturnType[number]) => {
 
 export const convertToPlaylist = (playlist: GetAllPlaylistsReturnType['data'][number]) => {
   const artworks = playlist.artworks.map((a) => a.artwork);
+  const isOnline = playlist.songs.some((s) => s.song?.path?.startsWith('online://'));
   return {
     playlistId: playlist.id,
     name: playlist.name,
     artworkPaths: parsePlaylistArtworks(artworks),
     songs: playlist.songs.map((s) => s.song.id),
     isArtworkAvailable: artworks.length > 0,
-    createdDate: playlist.createdAt
+    createdDate: playlist.createdAt,
+    isOnline
   } satisfies Playlist;
 };
 

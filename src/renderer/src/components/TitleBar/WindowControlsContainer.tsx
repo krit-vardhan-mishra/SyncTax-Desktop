@@ -1,6 +1,6 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useStore } from '@tanstack/react-store';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { settingsQuery } from '../../queries/settings';
@@ -8,6 +8,7 @@ import { store } from '../../store/store';
 import Button from '../Button';
 
 const WindowControlsContainer = () => {
+  const [isMaximized, setIsMaximized] = useState(false);
   const bodyBackgroundImage = useStore(store, (state) => state.bodyBackgroundImage);
   const {
     data: { hideWindowOnClose }
@@ -26,6 +27,20 @@ const WindowControlsContainer = () => {
   const minimize = useCallback(() => window.api.windowControls.minimizeApp(), []);
   const maximize = useCallback(() => window.api.windowControls.toggleMaximizeApp(), []);
 
+  useEffect(() => {
+    window.api.windowControls.isMaximized().then((max) => setIsMaximized(max));
+
+    const handleStateChange = (_e: unknown, state: 'maximized' | 'minimized' | 'normal') => {
+      setIsMaximized(state === 'maximized');
+    };
+
+    window.api.windowControls.onWindowStateChange(handleStateChange);
+
+    return () => {
+      window.api.windowControls.removeWindowStateChangeEvent(handleStateChange);
+    };
+  }, []);
+
   return (
     <div
       className="window-controls-container ml-6 flex h-full items-center justify-between"
@@ -37,7 +52,7 @@ const WindowControlsContainer = () => {
         } `}
         clickHandler={minimize}
         tooltipLabel={t('titleBar.minimize')}
-        iconName="minimize"
+        iconName="keyboard_arrow_down"
         iconClassName="h-fit text-xl font-light! transition-[background] ease-in-out"
       />
       <Button
@@ -47,7 +62,7 @@ const WindowControlsContainer = () => {
         clickHandler={maximize}
         tooltipLabel={t('titleBar.maximize')}
         iconClassName="material-icons-round-outlined h-fit text-lg font-light! transition-[background] ease-in-out"
-        iconName="crop_square"
+        iconName={isMaximized ? 'minimize' : 'keyboard_arrow_up'}
       />
       <Button
         className={`close-btn hover:!bg-font-color-crimson hover:!text-font-color-white !m-0 h-full !rounded-none !border-0 bg-transparent !px-3 text-xl -outline-offset-2 transition-[background] ease-in-out focus-visible:!outline dark:bg-transparent ${
