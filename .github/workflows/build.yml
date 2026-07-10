@@ -13,11 +13,11 @@ on:
   workflow_dispatch:
     inputs:
       tag_name:
-        description: 'Release tag (e.g., v4.0.0-alpha.5). Leave empty to use the current commit SHA.'
+        description: 'Release tag (e.g., v4.0.0-alpha.6). Leave empty to use the current commit SHA.'
         required: false
         type: string
       release_title:
-        description: 'Release title (e.g., SyncTax Desktop v4.0.0-alpha.5 — What Changed!)'
+        description: 'Release title (e.g., SyncTax Desktop v4.0.0-alpha.6 — What Changed!)'
         required: false
         type: string
       release_body:
