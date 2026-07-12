@@ -50,24 +50,25 @@ SyncTax Desktop is ready to use and doesn't require any command-line setup or bu
 
 ## 📸 Gallery & Screenshots
 
-Here is a preview of the clean, beautiful user interface:
-![Support for Online and Offline Lyrics](/resources/other/artwork%201.webp)
+Here is a preview of the clean, beautiful user interface of SyncTax Desktop:
 
-![Switch between Dark and Light Modes](/resources/other/artwork%202.webp)
+![Library Overview Overview](./resources/other/screenshots/synctax_library-overview_slide.png)
 
-![Support for Last.FM Scrobbling](/resources/other/artwork%209.webp)
+![Immersive Synced Lyrics](./resources/other/screenshots/synctax_synced-lyrics_slide.png)
 
-![Organize your music library with ease](/resources/other/artwork%203.webp)
+![Stunning Fullscreen Player](./resources/other/screenshots/synctax_fullscreen_slide.png)
 
-![See how your favorite artists appear on songs and albums](/resources/other/artwork%204.webp)
+![Detailed Album Explorer](./resources/other/screenshots/synctax_album-details_slide.png)
 
-![Keep your favorites closer to you](/resources/other/artwork%205.webp)
+![Create & Manage Playlists](./resources/other/screenshots/synctax_playlists_slide.png)
 
-![Search through your music library easily and efficiently](/resources/other/artwork%206.webp)
+![Quick Access Favorites](./resources/other/screenshots/synctax_favorites_slide.png)
 
-![Edit song metadata and organize your library](/resources/other/artwork%207.webp)
+![Millions of Online Tracks](./resources/other/screenshots/synctax_online-search_slide.png)
 
-![Listen with the mini player](/resources/other/artwork%208.webp)
+![Seamless Last.fm Scrobbling](./resources/other/screenshots/synctax_lastfm_slide.png)
+
+![Distraction-Free Mini Mode](./resources/other/screenshots/synctax_miniplayer_slide.png)
 
 ---
 
