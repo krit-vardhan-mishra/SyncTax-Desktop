@@ -1,6 +1,6 @@
 {
 	"name": "synctax-desktop",
-	"version": "4.0.0-alpha.6",
+	"version": "5.0.0-alpha.1",
 	"type": "module",
 	"description": "SyncTax Desktop",
 	"devEngines": {
