@@ -306,11 +306,14 @@ app
           details.requestHeaders[userAgentKey] = userAgent;
         }
 
-        details.requestHeaders['Origin'] = 'https://www.youtube.com';
         details.requestHeaders['Referer'] = 'https://www.youtube.com/';
-        details.requestHeaders['Sec-Fetch-Site'] = 'same-origin';
-        details.requestHeaders['Sec-Fetch-Mode'] = 'cors';
-        details.requestHeaders['Sec-Fetch-Dest'] = 'audio';
+        const originKey = Object.keys(details.requestHeaders).find(
+          (key) => key.toLowerCase() === 'origin'
+        );
+        if (originKey) {
+          details.requestHeaders[originKey] = 'https://www.youtube.com';
+        }
+
         callback({ requestHeaders: details.requestHeaders });
       }
     );

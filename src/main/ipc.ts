@@ -4,7 +4,7 @@ import addArtworkToAPlaylist from './core/addArtworkToAPlaylist';
 import addSongsFromFolderStructures from './core/addMusicFolder';
 import addNewPlaylist from './core/addNewPlaylist';
 import addSongsToPlaylist from './core/addSongsToPlaylist';
-import { searchOnline, getOnlineStreamUrl, loginToYouTube, isYouTubeLoggedIn, cacheOnlineSong, getOnlineRecommendations, getOnlineListenedSongs, removeFromOnlineListenedSongs, isYtDlpInstalled, downloadYtDlp } from './core/onlineMusic';
+import { searchOnline, getOnlineStreamUrl, loginToYouTube, isYouTubeLoggedIn, cacheOnlineSong, getOnlineRecommendations, getOnlineListenedSongs, removeFromOnlineListenedSongs, isYtDlpInstalled, downloadYtDlp, checkYtDlpUpdate } from './core/onlineMusic';
 import blacklistFolders from './core/blacklistFolders';
 import blacklistSongs from './core/blacklistSongs';
 import changeAppTheme from './core/changeAppTheme';
@@ -630,6 +630,7 @@ export function initializeIPC(mainWindow: BrowserWindow, abortSignal: AbortSigna
       });
     });
     ipcMain.handle('app/isYtDlpInstalled', () => isYtDlpInstalled());
+    ipcMain.handle('app/checkYtDlpUpdate', () => checkYtDlpUpdate());
     ipcMain.handle('app/downloadYtDlp', (event) => downloadYtDlp(event));
     ipcMain.handle('app/cacheOnlineSong', (_, song: any) => cacheOnlineSong(song));
     ipcMain.handle('app/getOnlineRecommendations', (_, videoId: string) => getOnlineRecommendations(videoId));

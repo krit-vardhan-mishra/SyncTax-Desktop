@@ -1,5 +1,4 @@
 import { useContext, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import PlaylistDefaultCover from '../../assets/images/webp/playlist_cover_default.webp';
 import { AppUpdateContext } from '../../contexts/AppUpdateContext';
 import Button from '../Button';
@@ -11,7 +10,6 @@ interface ImportOnlinePlaylistPromptProp {
 
 const ImportOnlinePlaylistPrompt = (props: ImportOnlinePlaylistPromptProp) => {
   const { changePromptMenuData, addNewNotifications } = useContext(AppUpdateContext);
-  const { t } = useTranslation();
 
   const [url, setUrl] = useState('');
   const [playlistType, setPlaylistType] = useState<'youtube' | 'spotify'>('youtube');

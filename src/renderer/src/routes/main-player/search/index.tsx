@@ -141,11 +141,24 @@ function SearchPage() {
     }
   );
 
+  const throttledSetOnlineSearch = useThrottledCallback(
+    (value) => {
+      navigate({ search: (prev) => ({ ...prev, keyword: value }), replace: true });
+    },
+    {
+      wait: 1500
+    }
+  );
+
   const updateSearchInput = (input: string) => {
     const value = input ?? '';
     setSearchText(value);
 
-    throttledSetSearch(value);
+    if (isOnlineSearch) {
+      throttledSetOnlineSearch(value);
+    } else {
+      throttledSetSearch(value);
+    }
   };
 
   const { noOfArtists, noOfPlaylists, noOfAlbums, noOfGenres } = useMemo(() => {

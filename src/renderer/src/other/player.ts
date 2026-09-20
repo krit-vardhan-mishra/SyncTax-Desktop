@@ -291,7 +291,7 @@ class AudioPlayer {
         this.audio.preload = 'auto';
         this.audio.defaultPlaybackRate = 1.0;
         this.audio.volume = needsConnection ? 1.0 : this.volume;
-        this.audio.muted = store.state.localStorage.preferences?.volume?.isMuted || false;
+        this.audio.muted = store.state.localStorage.playback?.volume?.isMuted || false;
 
         if (needsConnection) {
           this.connectAudioToWebAudio();

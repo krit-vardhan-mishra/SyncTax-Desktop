@@ -1,4 +1,4 @@
-import { execFile } from 'child_process';
+import { execFile, execSync } from 'child_process';
 import fs from 'fs';
 import https from 'https';
 import path from 'path';
@@ -179,6 +179,61 @@ export async function isYtDlpInstalled(): Promise<boolean> {
   return exists;
 }
 
+export async function checkYtDlpUpdate(): Promise<{
+  updateAvailable: boolean;
+  localVersion?: string;
+  latestVersion?: string;
+  error?: string;
+}> {
+  try {
+    const installed = await isYtDlpInstalled();
+    if (!installed) {
+      return { updateAvailable: false };
+    }
+
+    const ytDlpPath = getYtDlpPath();
+    let localVersion = 'Unknown';
+    try {
+      const { stdout } = await execFileAsync(ytDlpPath, ['--version']);
+      localVersion = stdout.trim();
+    } catch (versionErr) {
+      logger.error('[OnlineStream] Failed to run yt-dlp --version', { err: versionErr });
+      return { updateAvailable: false, error: 'Failed to check local yt-dlp version' };
+    }
+
+    const response = await fetch('https://api.github.com/repos/yt-dlp/yt-dlp/releases/latest', {
+      headers: {
+        'User-Agent': 'Nora-Player-App'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`GitHub API returned status ${response.status}: ${response.statusText}`);
+    }
+
+    const data: any = await response.json();
+    const latestVersionRaw = data.tag_name || data.name || '';
+    const latestVersion = latestVersionRaw.replace(/^v/, '').trim();
+    const normalizedLocalVersion = localVersion.replace(/^v/, '').trim();
+
+    const updateAvailable = normalizedLocalVersion !== latestVersion && latestVersion !== '';
+
+    logger.info(`[OnlineStream] yt-dlp update check: local="${normalizedLocalVersion}", latest="${latestVersion}", updateAvailable=${updateAvailable}`);
+
+    return {
+      updateAvailable,
+      localVersion: normalizedLocalVersion,
+      latestVersion
+    };
+  } catch (error: any) {
+    logger.error('[OnlineStream] Failed to check for yt-dlp updates', { err: error });
+    return {
+      updateAvailable: false,
+      error: error.message || String(error)
+    };
+  }
+}
+
 export async function downloadYtDlp(event: Electron.IpcMainInvokeEvent): Promise<void> {
   const destDir = app.getPath('userData');
   const isWindows = process.platform === 'win32';
@@ -293,6 +348,25 @@ export async function downloadYtDlp(event: Electron.IpcMainInvokeEvent): Promise
   });
 }
 
+/**
+ * Resolves the absolute path of the system Node.js executable.
+ * In Electron, process.execPath points to the Electron binary, not node.exe,
+ * so we must find the real node from the system PATH.
+ */
+function resolveNodeExecutablePath(): string {
+  try {
+    const cmd = process.platform === 'win32' ? 'where node' : 'which node';
+    const result = execSync(cmd, { encoding: 'utf8' }).trim();
+    const firstLine = result.split(/[\r\n]/)[0].trim();
+    if (firstLine && fs.existsSync(firstLine)) {
+      return firstLine;
+    }
+  } catch {
+    // Fall through to bare 'node' if lookup fails
+  }
+  return 'node';
+}
+
 export async function getOnlineStreamUrl(videoId: string): Promise<string> {
   try {
     logger.info(`[OnlineStream] Fetching stream URL for videoId: "${videoId}" using yt-dlp`);
@@ -308,13 +382,34 @@ export async function getOnlineStreamUrl(videoId: string): Promise<string> {
     }
 
     const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
-    const userAgent = session.defaultSession.getUserAgent();
+    const rawUserAgent = session.defaultSession.getUserAgent();
+    const userAgent = rawUserAgent
+      .replace(/SyncTax-?Desktop\/\S+/gi, '')
+      .replace(/Electron\/\S+/gi, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    // Resolve the real node.exe from PATH so yt-dlp can use it as a JS
+    // decryption runtime. In Electron, process.execPath is the Electron binary.
+    const nodeExePath = resolveNodeExecutablePath();
+    logger.info(`[OnlineStream] Using Node.js runtime for yt-dlp JS decryption: "${nodeExePath}"`);
+
     const args = [
       '-g',
       '-f',
-      'bestaudio[ext=webm]/bestaudio',
+      '18/best[height<=360]/bestaudio[ext=m4a]/bestaudio',
       '--user-agent',
       userAgent,
+      '--js-runtimes',
+      `node:${nodeExePath}`,
+      // Force IPv4 to prevent mismatches between yt-dlp's and Electron's
+      // network stacks: Windows assigns temporary IPv6 addresses per-app,
+      // so yt-dlp and Chromium may use different IPv6 addresses. The stream
+      // URL's `ip` parameter must match the IP that the browser uses to fetch
+      // it, otherwise YouTube's CDN returns 403 Forbidden.
+      '--force-ipv4',
+      '--extractor-args',
+      'youtube:player_client=android',
       videoUrl
     ];
     const { stdout, stderr } = await execFileAsync(ytDlpPath, args);
@@ -329,7 +424,15 @@ export async function getOnlineStreamUrl(videoId: string): Promise<string> {
       throw new Error('yt-dlp returned an empty or invalid stream URL');
     }
 
-    logger.info(`[OnlineStream] Successfully resolved stream URL via yt-dlp for videoId: "${videoId}"`);
+    try {
+      const parsedUrl = new URL(streamUrl);
+      const itag = parsedUrl.searchParams.get('itag') || 'unknown';
+      const mime = parsedUrl.searchParams.get('mime') || 'unknown';
+      const dur = parsedUrl.searchParams.get('dur') || 'unknown';
+      logger.info(`[OnlineStream] Successfully resolved stream URL for videoId "${videoId}": itag=${itag}, mime=${mime}, dur=${dur}s`);
+    } catch {
+      logger.info(`[OnlineStream] Successfully resolved stream URL via yt-dlp for videoId: "${videoId}"`);
+    }
     return streamUrl;
   } catch (error) {
     logger.error('Failed to get online stream URL with yt-dlp', { err: error, videoId });

@@ -3,7 +3,7 @@ import { promisify } from 'util';
 import fs from 'fs';
 import { eq } from 'drizzle-orm';
 import { db } from '../db/db';
-import { songs, playlists, playlistsSongs, artists, artistsSongs, artworks, artworksSongs, artworksPlaylists } from '../db/schema';
+import { songs, artists, artistsSongs, artworks, artworksSongs, artworksPlaylists } from '../db/schema';
 import { getYtDlpPath } from './onlineMusic';
 import { sendMessageToRenderer } from '../main';
 import logger from '../logger';

@@ -604,6 +604,12 @@ const onlineMusic = {
     ipcRenderer.invoke('app/removeFromOnlineListenedSongs', songId),
   isYtDlpInstalled: (): Promise<boolean> =>
     ipcRenderer.invoke('app/isYtDlpInstalled'),
+  checkYtDlpUpdate: (): Promise<{
+    updateAvailable: boolean;
+    localVersion?: string;
+    latestVersion?: string;
+    error?: string;
+  }> => ipcRenderer.invoke('app/checkYtDlpUpdate'),
   downloadYtDlp: (): Promise<void> =>
     ipcRenderer.invoke('app/downloadYtDlp'),
   onYtDlpDownloadProgress: (callback: (e: unknown, progress: number) => void) => {
